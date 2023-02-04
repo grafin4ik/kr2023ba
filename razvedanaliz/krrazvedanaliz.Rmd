@@ -1,0 +1,126 @@
+---
+title: "razvedanalis"
+output: html_document
+---
+# Подготовка к работе
+
+## Загрузка пакетов
+
+```{r setup, include=FALSE}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(GGally)
+library(sandwich)
+library(lmtest)
+library(broom)
+library(xtable)
+library(ggpubr)
+library(stargazer)
+library(modelsummary)
+library(nlWaldTest)
+library(car)
+library(margins)
+
+```
+
+
+### Общая тема оформления для всех графиков и отключение экспоненциальной записи чисел
+
+```{r cars}
+theme_set(theme_classic(base_size = 12))
+options(scipen = 999) 
+```
+
+
+# Загрузка данных 
+
+```{r pressure, echo=FALSE}
+my_data <- read.csv("dataset.csv")
+```
+
+
+# Типы данных
+
+```{r pressure, echo=FALSE}
+glimpse(my_data)
+```
+
+
+# Описательные статистики 
+
+```{r pressure, echo=FALSE}
+summary(my_data)
+```
+
+
+# Графики
+
+## Выюросы: доходы в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  ggplot(aes(y = income, x = sum_rub_buy)) + 
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Доходы в руб.")
+```
+
+
+## Выбросы: расходы на питание в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  ggplot(aes(x = income, y = sum_rub_buy)) + 
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Расходы в руб.")
+```
+
+
+## Плотность распределения: доход в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  ggplot(aes(income)) + 
+  geom_density(alpha = 0.25) +
+  xlab("Доход в руб.") +
+  ylab("")
+```
+
+
+## Плотность распределения: расходы на питание в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  ggplot(aes(sum_rub_buy)) + 
+  geom_density(alpha = 0.25) +
+  xlab("Расходы в руб.") +
+  ylab("")
+```
+
+
+## Корреляция (верхняя часть рисунка)
+## Плотность распределения (диагональ)
+## Совместное распределение (нижняя часть рисунка)
+## Первая переменная: доход в руб.; остальные: потребление продовольственных товаров в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  select(income, meat, cereals, eggs, fish, flour, fruits_and_berries, milk, alcodrinks, softdrinks, sweets, vegetables) %>% ggpairs() 
+```
+
+
+## Совместное распределение дохода в руб. и расходы на питание в руб.
+
+```{r pressure, echo=FALSE}
+my_data %>% 
+  ggplot(aes(x = income, y = sum_rub_buy)) +
+  geom_jitter(width = 0.25, alpha = 0.5) +  
+  scale_y_continuous(name = "Расходы на питание в руб.") +
+  scale_x_continuous(name = "Доходы в руб.")
+
+```
+
+
