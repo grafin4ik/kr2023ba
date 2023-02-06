@@ -1,6 +1,6 @@
 ---
 title: "razvedanalis"
-output: html_document
+output: rmarkdown::github_document
 ---
 # Подготовка к работе
 
