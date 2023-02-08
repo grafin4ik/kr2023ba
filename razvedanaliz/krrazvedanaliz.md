@@ -5,6 +5,26 @@ razvedanalis
 
 ## Загрузка пакетов
 
+``` r
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(GGally)
+library(sandwich)
+library(lmtest)
+library(broom)
+library(xtable)
+library(ggpubr)
+library(stargazer)
+library(modelsummary)
+library(nlWaldTest)
+library(car)
+library(margins)
+library(Hmisc)
+library(ggcorrplot)
+```
+
 ### Общая тема оформления для всех графиков и отключение экспоненциальной записи чисел
 
 ``` r
@@ -14,7 +34,15 @@ options(scipen = 999)
 
 # Загрузка данных
 
+``` r
+my_data <- read.csv("dataset.csv")
+```
+
 # Типы данных
+
+``` r
+glimpse(my_data)
+```
 
     ## Rows: 2,390
     ## Columns: 29
@@ -49,6 +77,10 @@ options(scipen = 999)
     ## $ inval              <int> 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, ~
 
 # Описательные статистики
+
+``` r
+summary(my_data)
+```
 
     ##       meat             fish             eggs             milk       
     ##  Min.   : 0.000   Min.   :0.0000   Min.   :  0.00   Min.   : 0.000  
@@ -119,34 +151,121 @@ options(scipen = 999)
 
 ## Выбросы: доходы в руб.
 
-    ## Warning: Continuous x aesthetic -- did you forget aes(group=...)?
+``` r
+my_data %>% 
+  ggplot(aes(y = income, x = sum_rub_buy)) + 
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Доходы в руб.")
+```
 
 ![](krrazvedanaliz_files/figure-gfm/4-1.png)<!-- -->
 
 ## Выбросы: расходы на питание в руб.
 
-    ## Warning: Continuous x aesthetic -- did you forget aes(group=...)?
+``` r
+my_data %>% 
+  ggplot(aes(x = income, y = sum_rub_buy)) + 
+  geom_boxplot() +
+  xlab("") + 
+  ylab("Расходы в руб.")
+```
 
 ![](krrazvedanaliz_files/figure-gfm/5-1.png)<!-- -->
 
 ## Плотность распределения: доход в руб.
 
+``` r
+my_data %>% 
+  ggplot(aes(income)) + 
+  geom_density(alpha = 0.25) +
+  xlab("Доход в руб.") +
+  ylab("")
+```
+
 ![](krrazvedanaliz_files/figure-gfm/6-1.png)<!-- -->
 
 ## Плотность распределения: расходы на питание в руб.
 
+``` r
+my_data %>% 
+  ggplot(aes(sum_rub_buy)) + 
+  geom_density(alpha = 0.25) +
+  xlab("Расходы в руб.") +
+  ylab("")
+```
+
 ![](krrazvedanaliz_files/figure-gfm/7-1.png)<!-- -->
 
-## Корреляция (верхняя часть рисунка)
+## Корреляция между категориями еды и доходом
 
-## Плотность распределения (диагональ)
+``` r
+correlation = my_data %>% select(1:13)
+b = rcorr(as.matrix(correlation))
+tidy(b)
+```
 
-## Совместное распределение (нижняя часть рисунка)
+    ## # A tibble: 78 x 5
+    ##    column1    column2 estimate     n      p.value
+    ##    <chr>      <chr>      <dbl> <int>        <dbl>
+    ##  1 fish       meat      0.191   2390 0           
+    ##  2 eggs       meat      0.383   2390 0           
+    ##  3 eggs       fish      0.116   2390 0.0000000131
+    ##  4 milk       meat      0.400   2390 0           
+    ##  5 milk       fish      0.178   2390 0           
+    ##  6 milk       eggs      0.318   2390 0           
+    ##  7 vegetables meat      0.109   2390 0.0000000937
+    ##  8 vegetables fish      0.0300  2390 0.143       
+    ##  9 vegetables eggs      0.0815  2390 0.0000670   
+    ## 10 vegetables milk      0.0741  2390 0.000286    
+    ## # ... with 68 more rows
 
-## Первая переменная: доход в руб.; остальные: потребление продовольственных товаров в руб.
+## Корреляция между независимыми переменными
 
-![](krrazvedanaliz_files/figure-gfm/8-1.png)<!-- -->
+``` r
+correlation1 = my_data %>% select(13:29)
+a = rcorr(as.matrix(correlation1))
+tidy(a)
+```
+
+    ## # A tibble: 136 x 5
+    ##    column1   column2  estimate     n p.value
+    ##    <chr>     <chr>       <dbl> <int>   <dbl>
+    ##  1 diplom    income     0.297   2390   0    
+    ##  2 car       income     0.370   2390   0    
+    ##  3 car       diplom     0.263   2390   0    
+    ##  4 plot_bi   income    -0.0246  1124   0.409
+    ##  5 plot_bi   diplom    -0.0284  1124   0.341
+    ##  6 plot_bi   car        0.0361  1124   0.226
+    ##  7 plot_size income     0.0157  1119   0.600
+    ##  8 plot_size diplom    -0.0457  1119   0.127
+    ##  9 plot_size car        0.0231  1119   0.440
+    ## 10 plot_size plot_bi -Inf       1119   0    
+    ## # ... with 126 more rows
+
+### График корреляции между категориями еды и доходом
+
+``` r
+ggcorrplot(cor(correlation))
+```
+
+![](krrazvedanaliz_files/figure-gfm/10-1.png)<!-- --> \#\#\# График
+корреляции между независимыми переменными
+
+``` r
+ggcorrplot(cor(correlation1))
+```
+
+![](krrazvedanaliz_files/figure-gfm/11-1.png)<!-- -->
 
 ## Совместное распределение дохода в руб. и расходы на питание в руб.
 
-![](krrazvedanaliz_files/figure-gfm/9-1.png)<!-- -->
+``` r
+my_data %>% 
+  ggplot(aes(x = income, y = sum_rub_buy)) +
+  geom_jitter(width = 0.25, alpha = 0.5) +  
+  scale_y_continuous(name = "Расходы на питание в руб.") +
+  scale_x_continuous(name = "Доходы в руб.")
+```
+
+![](krrazvedanaliz_files/figure-gfm/12-1.png)<!-- -->
