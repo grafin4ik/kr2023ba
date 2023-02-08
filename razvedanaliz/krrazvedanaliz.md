@@ -424,7 +424,7 @@ rcorr(as.matrix(correlation1))
 ggcorrplot(cor(correlation))
 ```
 
-![](krrazvedanaliz_files/figure-gfm/10-1.png)<!-- --> \#\#\# График
+![](krrazvedanaliz_files/figure-gfm/10-1.png)<!-- --> \#\# График
 корреляции между независимыми переменными
 
 ``` r
