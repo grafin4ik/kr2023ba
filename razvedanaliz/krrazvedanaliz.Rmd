@@ -1,14 +1,12 @@
 ---
 title: "razvedanalis"
-output:  
-  html_document:
-    keep_md: true
+output: github_document
 ---
 # Подготовка к работе
 
 ## Загрузка пакетов
 
-```{r setup, include=FALSE}
+```{r setup, message=FALSE, warning=FALSE}
 library(readr)
 library(dplyr)
 library(tidyr)
@@ -24,6 +22,9 @@ library(modelsummary)
 library(nlWaldTest)
 library(car)
 library(margins)
+library(Hmisc)
+library(ggcorrplot)
+library(ggstatsplot)
 
 ```
 
@@ -38,53 +39,43 @@ options(scipen = 999)
 
 # Загрузка данных 
 
-```{r pressure, echo=FALSE}
+```{r 1}
 my_data <- read.csv("dataset.csv")
+```
+
+# Избавляем от пустых значений и убираем выбросы
+
+```{r outliers}
+
+data <- replace(my_data,is.na(my_data),0) 
+
+boxplot(data) # Checking outliers
+
+# Removing outliers from income
+x <- data[data$'income' > quantile(data$'income', 0.005) & data$'income' < quantile(data$'income', 0.995),]
+
 ```
 
 
 # Типы данных
 
-```{r pressure, echo=FALSE}
-glimpse(my_data)
+```{r 2}
+glimpse(x)
 ```
 
 
 # Описательные статистики 
 
-```{r pressure, echo=FALSE}
-summary(my_data)
+```{r 3}
+summary(x)
 ```
 
 
 # Графики
 
-## Выюросы: доходы в руб.
-
-```{r pressure, echo=FALSE}
-my_data %>% 
-  ggplot(aes(y = income, x = sum_rub_buy)) + 
-  geom_boxplot() +
-  xlab("") + 
-  ylab("Доходы в руб.")
-```
-
-
-## Выбросы: расходы на питание в руб.
-
-```{r pressure, echo=FALSE}
-my_data %>% 
-  ggplot(aes(x = income, y = sum_rub_buy)) + 
-  geom_boxplot() +
-  xlab("") + 
-  ylab("Расходы в руб.")
-```
-
-
 ## Плотность распределения: доход в руб.
-
-```{r pressure, echo=FALSE}
-my_data %>% 
+```{r 6}
+x %>% 
   ggplot(aes(income)) + 
   geom_density(alpha = 0.25) +
   xlab("Доход в руб.") +
@@ -94,8 +85,8 @@ my_data %>%
 
 ## Плотность распределения: расходы на питание в руб.
 
-```{r pressure, echo=FALSE}
-my_data %>% 
+```{r 7}
+x %>% 
   ggplot(aes(sum_rub_buy)) + 
   geom_density(alpha = 0.25) +
   xlab("Расходы в руб.") +
@@ -103,26 +94,45 @@ my_data %>%
 ```
 
 
-## Корреляция (верхняя часть рисунка)
-## Плотность распределения (диагональ)
-## Совместное распределение (нижняя часть рисунка)
-## Первая переменная: доход в руб.; остальные: потребление продовольственных товаров в руб.
+## Корреляция между категориями еды и доходом
 
-```{r pressure, echo=FALSE}
-my_data %>% 
-  select(income, meat, cereals, eggs, fish, flour, fruits_and_berries, milk, alcodrinks, softdrinks, sweets, vegetables) %>% ggpairs() 
+```{r 8, warning=FALSE}
+correlation = x %>% select(1:13)
+rcorr(as.matrix(correlation))
+```
+
+
+## Корреляция между независимыми переменными
+```{r 9, warning=FALSE}
+correlation1 = data %>% select(13:29)
+rcorr(as.matrix(correlation1))
+```
+### График корреляции между категориями еды и доходом
+```{r 10}
+ggcorrplot(cor(correlation))
+```
+
+
+```{r corr, warning = FALSE}
+b = rcorr(as.matrix(data))
+tidy(b)
+```
+
+
+### График корреляции между независимыми переменными
+```{r 11}
+ggcorrplot(cor(correlation1))
+
 ```
 
 
 ## Совместное распределение дохода в руб. и расходы на питание в руб.
 
-```{r pressure, echo=FALSE}
-my_data %>% 
+```{r 12}
+x %>% 
   ggplot(aes(x = income, y = sum_rub_buy)) +
   geom_jitter(width = 0.25, alpha = 0.5) +  
   scale_y_continuous(name = "Расходы на питание в руб.") +
   scale_x_continuous(name = "Доходы в руб.")
 
 ```
-
-
