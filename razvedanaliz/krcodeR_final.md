@@ -926,13 +926,13 @@ t.test(x$alcodrinks ~ x$plot_bi)
     ## mean in group 0 mean in group 1 
     ##       0.4602313       0.4349955
 
-## Совместное распределение дохода в руб. и расходы на питание в руб.
+## Совместное распределение дохода в руб. и потребления овощей в руб.
 
 ``` r
 x %>% 
-  ggplot(aes(x = income, y = sum_rub_buy)) +
+  ggplot(aes(x = income, y = vegetables)) +
   geom_jitter(width = 0.25, alpha = 0.5) +  
-  scale_y_continuous(name = "Расходы на питание в руб.") +
+  scale_y_continuous(name = "потребление овощей") +
   scale_x_continuous(name = "Доходы в руб.")
 ```
 
@@ -1158,464 +1158,18 @@ food_consumption_table
     ## 11 vegetables             5.50         3.79
 
 
-
     # Построение регрессий 
 
-    ## Модель 1: линейная
+    ## Модель общая (доход логарифмируем)
 
-    ### Зависимая перменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
-
+    ### Зависимая переменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
 
 
     ```r
-    model1_meat <- lm(meat ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                      + debt + govsubs + inval + status, data = x)
-    cov_model1_meat <- vcovHC(model1_meat, type = "HC0")
-    coeftest(model1_meat, df = Inf, vcov = cov_model1_meat)
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value          Pr(>|z|)    
-    ## (Intercept)  1.034595625059  0.261350061931  3.9587 0.000075371938081 ***
-    ## income       0.000005909669  0.000002206153  2.6787          0.007390 ** 
-    ## diplom      -0.198315467040  0.114922301983 -1.7256          0.084411 .  
-    ## car          0.177065812887  0.170139296309  1.0407          0.298010    
-    ## plot_bi      0.182556422297  0.130786688786  1.3958          0.162765    
-    ## famsize      0.448464324399  0.065332251961  6.8644 0.000000000006679 ***
-    ## water       -0.110074949156  0.223356110008 -0.4928          0.622138    
-    ## sanitation   0.511561790372  0.213798690315  2.3927          0.016724 *  
-    ## fridge       0.171384265643  0.128727618779  1.3314          0.183067    
-    ## internet    -0.031321500167  0.132999093239 -0.2355          0.813819    
-    ## pfuel        0.000063158366  0.000036004700  1.7542          0.079401 .  
-    ## ptransp      0.000031553280  0.000034348299  0.9186          0.358291    
-    ## phome        0.000033103855  0.000017888067  1.8506          0.064226 .  
-    ## debt         0.000000022581  0.000000354369  0.0637          0.949192    
-    ## govsubs      0.000002309453  0.000003346956  0.6900          0.490184    
-    ## inval        0.048381678058  0.167547597360  0.2888          0.772762    
-    ## status2      0.040731901776  0.118043541206  0.3451          0.730051    
-    ## status3      0.731827166705  0.231780051495  3.1574          0.001592 ** 
-    ## status4      0.028699076337  0.201883722915  0.1422          0.886956    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-vif(model1_meat)
-```
-
-    ##                GVIF Df GVIF^(1/(2*Df))
-    ## income     2.220372  1        1.490091
-    ## diplom     1.254522  1        1.120054
-    ## car        2.190657  1        1.480087
-    ## plot_bi    1.464664  1        1.210233
-    ## famsize    1.888588  1        1.374259
-    ## water      1.567601  1        1.252039
-    ## sanitation 2.857005  1        1.690268
-    ## fridge     1.099346  1        1.048497
-    ## internet   1.367118  1        1.169238
-    ## pfuel      2.283620  1        1.511165
-    ## ptransp    1.116306  1        1.056554
-    ## phome      1.266799  1        1.125522
-    ## debt       1.095357  1        1.046593
-    ## govsubs    1.274428  1        1.128906
-    ## inval      1.154655  1        1.074549
-    ## status     2.136251  3        1.134859
-
-### Зависимая перменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
-
-``` r
-model1_fish <- lm(fish ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_fish <- vcovHC(model1_fish, type = "HC0")
-coeftest(model1_fish, df = Inf, vcov = cov_model1_fish)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value   Pr(>|z|)    
-    ## (Intercept)  0.069031918499  0.097481419456  0.7082    0.47885    
-    ## income       0.000001746332  0.000000727282  2.4012    0.01634 *  
-    ## diplom       0.025893436767  0.037877614639  0.6836    0.49422    
-    ## car         -0.067241585411  0.053645570782 -1.2534    0.21005    
-    ## plot_bi      0.062782758196  0.037408332113  1.6783    0.09329 .  
-    ## famsize      0.084181808445  0.019305668127  4.3605 0.00001298 ***
-    ## water        0.008885832906  0.078187715776  0.1136    0.90952    
-    ## sanitation   0.011798934140  0.065337996908  0.1806    0.85669    
-    ## fridge       0.058518252755  0.037188177112  1.5736    0.11559    
-    ## internet    -0.022932051593  0.039634166642 -0.5786    0.56286    
-    ## pfuel        0.000015178079  0.000010089941  1.5043    0.13251    
-    ## ptransp     -0.000006891591  0.000007201633 -0.9569    0.33859    
-    ## phome       -0.000004377850  0.000005649637 -0.7749    0.43840    
-    ## debt        -0.000000125834  0.000000092451 -1.3611    0.17348    
-    ## govsubs      0.000002337717  0.000001099062  2.1270    0.03342 *  
-    ## inval        0.002461516424  0.047535317010  0.0518    0.95870    
-    ## status2      0.001056874732  0.038937585992  0.0271    0.97835    
-    ## status3     -0.069950454352  0.072751901583 -0.9615    0.33630    
-    ## status4      0.095176531953  0.071133473028  1.3380    0.18090    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней яиц, шт. (eggs)
-
-``` r
-model1_eggs <- lm(eggs ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_eggs <- vcovHC(model1_eggs, type = "HC0")
-coeftest(model1_eggs, df = Inf, vcov = cov_model1_eggs)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value   Pr(>|z|)    
-    ## (Intercept)  4.37328183233  1.12296150853  3.8944 0.00009843 ***
-    ## income       0.00003168252  0.00000863457  3.6693  0.0002433 ***
-    ## diplom       0.41928259138  0.46712321016  0.8976  0.3694071    
-    ## car         -0.58492269537  0.61757986112 -0.9471  0.3435773    
-    ## plot_bi     -0.99052392199  0.50314163466 -1.9687  0.0489901 *  
-    ## famsize      1.09315460303  0.24749908783  4.4168 0.00001002 ***
-    ## water       -0.48596521627  0.90443236758 -0.5373  0.5910499    
-    ## sanitation   1.94332313683  0.87051373223  2.2324  0.0255894 *  
-    ## fridge       0.26786857262  0.46025224829  0.5820  0.5605641    
-    ## internet    -0.56752713641  0.51193580240 -1.1086  0.2676069    
-    ## pfuel        0.00021952189  0.00011591800  1.8938  0.0582557 .  
-    ## ptransp      0.00001935097  0.00011929591  0.1622  0.8711406    
-    ## phome        0.00027207027  0.00008103803  3.3573  0.0007870 ***
-    ## debt        -0.00000169869  0.00000095793 -1.7733  0.0761792 .  
-    ## govsubs      0.00001558538  0.00001326548  1.1749  0.2400419    
-    ## inval        0.46262212262  0.59101431619  0.7828  0.4337683    
-    ## status2      0.14478932478  0.49638915027  0.2917  0.7705274    
-    ## status3     -1.59111550970  0.83758717153 -1.8996  0.0574802 .  
-    ## status4     -1.93450183383  0.81256807376 -2.3807  0.0172786 *  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
-
-``` r
-model1_milk <- lm(milk ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_milk <- vcovHC(model1_milk, type = "HC0")
-coeftest(model1_milk, df = Inf, vcov = cov_model1_milk)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value             Pr(>|z|)    
-    ## (Intercept)  0.15408227130  0.32108680338  0.4799             0.631315    
-    ## income      -0.00000066467  0.00000267194 -0.2488             0.803547    
-    ## diplom       0.27776769471  0.13746526183  2.0206             0.043317 *  
-    ## car          0.48300504792  0.19207102789  2.5147             0.011913 *  
-    ## plot_bi      0.62666457096  0.14759003675  4.2460 0.000021763855353320 ***
-    ## famsize      0.61972873484  0.07771007336  7.9749 0.000000000000001525 ***
-    ## water       -0.80801900134  0.24786692967 -3.2599             0.001115 ** 
-    ## sanitation   1.37712490579  0.24046892523  5.7268 0.000000010232398506 ***
-    ## fridge      -0.05247306164  0.13351462969 -0.3930             0.694309    
-    ## internet    -0.14466792647  0.13780107807 -1.0498             0.293796    
-    ## pfuel        0.00002934417  0.00003555421  0.8253             0.409181    
-    ## ptransp      0.00004634992  0.00002563079  1.8084             0.070549 .  
-    ## phome        0.00013797627  0.00002254012  6.1214 0.000000000927783288 ***
-    ## debt         0.00000070141  0.00000039667  1.7682             0.077025 .  
-    ## govsubs      0.00001834320  0.00000413446  4.4367 0.000009136495915833 ***
-    ## inval        0.11027638375  0.17527760260  0.6292             0.529249    
-    ## status2      0.21434137909  0.14604268883  1.4677             0.142196    
-    ## status3      0.23788483241  0.28521335208  0.8341             0.404248    
-    ## status4      0.26504197145  0.23168869214  1.1440             0.252641    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней овощей, кг. (vegetables)
-
-``` r
-model1_vegetables <- lm(vegetables ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_vegetables <- vcovHC(model1_vegetables, type = "HC0")
-coeftest(model1_vegetables, df = Inf, vcov = cov_model1_vegetables)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                  Estimate    Std. Error z value  Pr(>|z|)    
-    ## (Intercept)  6.4688637255  1.7203886766  3.7601 0.0001698 ***
-    ## income       0.0000123773  0.0000124228  0.9963 0.3190872    
-    ## diplom       0.4137823334  0.6402390403  0.6463 0.5180893    
-    ## car          0.6586506543  0.8176518752  0.8055 0.4205086    
-    ## plot_bi     -2.5009454169  0.6811942213 -3.6714 0.0002412 ***
-    ## famsize      0.5091539552  0.2538110911  2.0060 0.0448525 *  
-    ## water       -0.8991617696  1.8992745838 -0.4734 0.6359109    
-    ## sanitation  -2.9028594881  1.9105427484 -1.5194 0.1286644    
-    ## fridge       0.7541453859  0.6187616144  1.2188 0.2229209    
-    ## internet    -0.6470346575  0.8479204467 -0.7631 0.4454132    
-    ## pfuel       -0.0000422696  0.0001341847 -0.3150 0.7527534    
-    ## ptransp      0.0000604831  0.0000811456  0.7454 0.4560506    
-    ## phome        0.0000471850  0.0000731428  0.6451 0.5188576    
-    ## debt         0.0000021893  0.0000031408  0.6970 0.4857727    
-    ## govsubs     -0.0000071365  0.0000148652 -0.4801 0.6311714    
-    ## inval       -1.1299441355  0.4792198215 -2.3579 0.0183795 *  
-    ## status2      1.3445885800  0.7631470881  1.7619 0.0780863 .  
-    ## status3     -0.2765113106  1.0966270408 -0.2521 0.8009274    
-    ## status4     -2.6552918142  1.4964724774 -1.7744 0.0760024 .  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
-
-``` r
-model1_fruits_and_berries <- lm(fruits_and_berries ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_fruits_and_berries <- vcovHC(model1_fruits_and_berries, type = "HC0")
-coeftest(model1_fruits_and_berries, df = Inf, vcov = cov_model1_fruits_and_berries)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value     Pr(>|z|)    
-    ## (Intercept)  0.54550467814  0.25858488849  2.1096    0.0348948 *  
-    ## income       0.00001355328  0.00000326717  4.1483 0.0000334919 ***
-    ## diplom      -0.16028366158  0.15135774196 -1.0590    0.2896124    
-    ## car          0.18713418678  0.19648683986  0.9524    0.3408938    
-    ## plot_bi     -0.11191258931  0.14631262203 -0.7649    0.4443390    
-    ## famsize      0.16704994664  0.06872522697  2.4307    0.0150700 *  
-    ## water        0.46608250750  0.28344011423  1.6444    0.1000983    
-    ## sanitation  -0.02618142308  0.26017857263 -0.1006    0.9198452    
-    ## fridge       0.62445825437  0.12582837093  4.9628 0.0000006949 ***
-    ## internet     0.41209030674  0.14209699363  2.9001    0.0037309 ** 
-    ## pfuel       -0.00002371580  0.00003214006 -0.7379    0.4605819    
-    ## ptransp      0.00006675405  0.00003551430  1.8796    0.0601574 .  
-    ## phome       -0.00005041239  0.00002187649 -2.3044    0.0211996 *  
-    ## debt        -0.00000055412  0.00000025116 -2.2062    0.0273674 *  
-    ## govsubs      0.00000407907  0.00000429455  0.9498    0.3422015    
-    ## inval       -0.05455453279  0.18256711107 -0.2988    0.7650781    
-    ## status2     -0.49949431000  0.13692061286 -3.6481    0.0002642 ***
-    ## status3     -0.34756225814  0.29125661918 -1.1933    0.2327442    
-    ## status4     -0.30096741903  0.21121074453 -1.4250    0.1541680    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
-
-``` r
-model1_cereals <- lm(cereals ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_cereals <- vcovHC(model1_cereals, type = "HC0")
-coeftest(model1_cereals, df = Inf, vcov = cov_model1_cereals)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value       Pr(>|z|)    
-    ## (Intercept)  0.047102863741  0.091069328428  0.5172      0.6050027    
-    ## income       0.000002412891  0.000000753011  3.2043      0.0013538 ** 
-    ## diplom      -0.063688670599  0.042863324550 -1.4859      0.1373176    
-    ## car         -0.063094174997  0.057575192296 -1.0959      0.2731414    
-    ## plot_bi      0.172928674900  0.046861491340  3.6902      0.0002241 ***
-    ## famsize      0.113873743727  0.018969850988  6.0029 0.000000001938 ***
-    ## water       -0.054486657036  0.078135393492 -0.6973      0.4855923    
-    ## sanitation   0.143966319406  0.074826984146  1.9240      0.0543559 .  
-    ## fridge       0.044880743899  0.041105788092  1.0918      0.2749056    
-    ## internet    -0.032991338776  0.045579767526 -0.7238      0.4691791    
-    ## pfuel       -0.000005363753  0.000009848466 -0.5446      0.5860092    
-    ## ptransp      0.000007425420  0.000011502450  0.6456      0.5185701    
-    ## phome        0.000008506295  0.000010350156  0.8219      0.4111612    
-    ## debt         0.000000077025  0.000000105186  0.7323      0.4639995    
-    ## govsubs     -0.000000800738  0.000001208835 -0.6624      0.5077122    
-    ## inval       -0.068645429600  0.051854618394 -1.3238      0.1855676    
-    ## status2      0.020402016766  0.044076010230  0.4629      0.6434485    
-    ## status3      0.192915668616  0.085989323326  2.2435      0.0248656 *  
-    ## status4      0.107492288435  0.066282872798  1.6217      0.1048632    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней муки и мучных продуктов (flour)
-
-``` r
-model1_flour <- lm(flour ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_flour <- vcovHC(model1_flour, type = "HC0")
-coeftest(model1_flour, df = Inf, vcov = cov_model1_flour)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value              Pr(>|z|)    
-    ## (Intercept) -1.87176201711  0.46208813640 -4.0507  0.000051073332031297 ***
-    ## income       0.00001342491  0.00000393618  3.4106             0.0006481 ***
-    ## diplom      -0.47173127029  0.18160499499 -2.5976             0.0093887 ** 
-    ## car         -1.10303794121  0.23758861473 -4.6426  0.000003439886634751 ***
-    ## plot_bi      0.82811992937  0.16396338151  5.0506  0.000000440333425299 ***
-    ## famsize      1.52241433159  0.11870548642 12.8251 < 0.00000000000000022 ***
-    ## water        1.61695287989  0.41731483526  3.8747             0.0001068 ***
-    ## sanitation  -0.11659546953  0.36858133825 -0.3163             0.7517476    
-    ## fridge       0.45502043854  0.13939879556  3.2642             0.0010979 ** 
-    ## internet     0.15631268201  0.16752511946  0.9331             0.3507838    
-    ## pfuel        0.00000421363  0.00003932568  0.1071             0.9146723    
-    ## ptransp     -0.00006724895  0.00003235579 -2.0784             0.0376706 *  
-    ## phome       -0.00020168637  0.00003198677 -6.3053  0.000000000287626393 ***
-    ## debt        -0.00000055414  0.00000036873 -1.5028             0.1328853    
-    ## govsubs     -0.00001449548  0.00000538077 -2.6939             0.0070613 ** 
-    ## inval       -0.03703922302  0.22157698276 -0.1672             0.8672427    
-    ## status2      0.69838492915  0.13910387703  5.0206  0.000000515103178892 ***
-    ## status3      2.73586777131  0.44344898484  6.1695  0.000000000684972309 ***
-    ## status4      2.50693292883  0.31264978035  8.0183  0.000000000000001072 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
-
-``` r
-model1_sweets <- lm(sweets ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status , data = x)
-cov_model1_sweets <- vcovHC(model1_sweets, type = "HC0")
-coeftest(model1_sweets, df = Inf, vcov = cov_model1_sweets)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value           Pr(>|z|)    
-    ## (Intercept)  0.112211984048  0.258470200796  0.4341          0.6641875    
-    ## income       0.000001059192  0.000001817599  0.5827          0.5600666    
-    ## diplom      -0.131715037721  0.104067806139 -1.2657          0.2056328    
-    ## car         -0.168184628185  0.156255355791 -1.0763          0.2817731    
-    ## plot_bi      0.483084424252  0.098903330955  4.8844 0.0000010373898367 ***
-    ## famsize      0.471571452744  0.065509695901  7.1985 0.0000000000006088 ***
-    ## water       -0.013984870846  0.250415140557 -0.0558          0.9554639    
-    ## sanitation  -0.056594125275  0.230619462719 -0.2454          0.8061464    
-    ## fridge       0.033713807807  0.104457379246  0.3228          0.7468832    
-    ## internet     0.098170953518  0.111128135783  0.8834          0.3770184    
-    ## pfuel        0.000051261499  0.000029491008  1.7382          0.0821742 .  
-    ## ptransp      0.000035811912  0.000017285116  2.0718          0.0382808 *  
-    ## phome        0.000004528717  0.000015749955  0.2875          0.7737001    
-    ## debt        -0.000000041387  0.000000268858 -0.1539          0.8776605    
-    ## govsubs      0.000003167655  0.000003128742  1.0124          0.3113290    
-    ## inval       -0.473937115515  0.119844221306 -3.9546 0.0000766597046064 ***
-    ## status2      0.201773598171  0.089038345733  2.2661          0.0234426 *  
-    ## status3      0.680672132790  0.199328698403  3.4148          0.0006382 ***
-    ## status4      0.920842073544  0.200098962714  4.6019 0.0000041858732779 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
-
-``` r
-model1_softdrinks <- lm(softdrinks ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_softdrinks <- vcovHC(model1_softdrinks, type = "HC0")
-coeftest(model1_softdrinks, df = Inf, vcov = cov_model1_softdrinks)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                  Estimate    Std. Error z value Pr(>|z|)   
-    ## (Intercept) -0.0989804837  0.1397366715 -0.7083 0.478737   
-    ## income       0.0000038613  0.0000018372  2.1017 0.035580 * 
-    ## diplom      -0.1005415105  0.0752597289 -1.3359 0.181573   
-    ## car         -0.1170493500  0.0947416672 -1.2355 0.216660   
-    ## plot_bi      0.1215986912  0.0715702461  1.6990 0.089317 . 
-    ## famsize      0.1040642214  0.0434798471  2.3934 0.016693 * 
-    ## water        0.1648971707  0.1125272895  1.4654 0.142813   
-    ## sanitation   0.1024053626  0.1138076830  0.8998 0.368221   
-    ## fridge      -0.0560493734  0.0620566099 -0.9032 0.366421   
-    ## internet     0.1186718680  0.0590877536  2.0084 0.044601 * 
-    ## pfuel       -0.0000056147  0.0000182396 -0.3078 0.758210   
-    ## ptransp      0.0000422926  0.0000248336  1.7030 0.088560 . 
-    ## phome       -0.0000061206  0.0000106838 -0.5729 0.566720   
-    ## debt         0.0000007694  0.0000003097  2.4844 0.012978 * 
-    ## govsubs     -0.0000048633  0.0000017942 -2.7106 0.006717 **
-    ## inval       -0.0802166054  0.0614121340 -1.3062 0.191484   
-    ## status2     -0.0515481911  0.0694464518 -0.7423 0.457922   
-    ## status3      0.2958022761  0.1552805708  1.9050 0.056786 . 
-    ## status4      0.0899635026  0.1005758353  0.8945 0.371063   
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-### Зависимая перменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
-
-``` r
-model1_alcodrinks <- lm(alcodrinks ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_alcodrinks <- vcovHC(model1_alcodrinks, type = "HC0")
-coeftest(model1_alcodrinks, df = Inf, vcov = cov_model1_alcodrinks)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value  Pr(>|z|)    
-    ## (Intercept)  0.42918073589  0.21992855799  1.9515 0.0510029 .  
-    ## income       0.00000137817  0.00000099522  1.3848 0.1661200    
-    ## diplom      -0.09289117823  0.05507396694 -1.6867 0.0916683 .  
-    ## car          0.14764066303  0.08260982346  1.7872 0.0739044 .  
-    ## plot_bi     -0.05977101247  0.08041241016 -0.7433 0.4572965    
-    ## famsize      0.06157481502  0.02701473822  2.2793 0.0226490 *  
-    ## water       -0.23169426412  0.15165353862 -1.5278 0.1265655    
-    ## sanitation   0.09550231253  0.08911113598  1.0717 0.2838452    
-    ## fridge      -0.19914932003  0.06986037294 -2.8507 0.0043626 ** 
-    ## internet     0.06661846593  0.05468394509  1.2182 0.2231307    
-    ## pfuel        0.00000056162  0.00001644635  0.0341 0.9727589    
-    ## ptransp      0.00006169481  0.00003665439  1.6831 0.0923462 .  
-    ## phome       -0.00000013914  0.00000714857 -0.0195 0.9844711    
-    ## debt         0.00000049640  0.00000014608  3.3981 0.0006785 ***
-    ## govsubs     -0.00000101179  0.00000179316 -0.5642 0.5725842    
-    ## inval       -0.15112890511  0.05683566329 -2.6591 0.0078361 ** 
-    ## status2      0.00943967245  0.05768651824  0.1636 0.8700166    
-    ## status3     -0.14418980684  0.09324939154 -1.5463 0.1220366    
-    ## status4     -0.05910076370  0.09989638567 -0.5916 0.5541046    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-model1_sum_rub_buy <- lm(sum_rub_buy ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + factor(status), data = x)
-cov_model1_sum_rub_buy <- vcovHC(model1_sum_rub_buy, type = "HC0")
-coeftest(model1_sum_rub_buy, df = Inf, vcov = cov_model1_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                       Estimate     Std. Error z value              Pr(>|z|)    
-    ## (Intercept)      270.048470718  161.593273737  1.6712             0.0946898 .  
-    ## income             0.010071523    0.001579711  6.3755       0.0000000001823 ***
-    ## diplom           -20.534700107   69.356396825 -0.2961             0.7671728    
-    ## car               59.393654529  116.140219845  0.5114             0.6090737    
-    ## plot_bi          269.256054774   80.504355112  3.3446             0.0008240 ***
-    ## famsize          334.028560636   39.860629619  8.3799 < 0.00000000000000022 ***
-    ## water           -306.705461410  116.670925723 -2.6288             0.0085685 ** 
-    ## sanitation       562.235534900  127.520210943  4.4090       0.0000103853068 ***
-    ## fridge           266.764405309   72.819720114  3.6634             0.0002489 ***
-    ## internet          42.765055487   73.283014842  0.5836             0.5595162    
-    ## pfuel              0.065599997    0.026806045  2.4472             0.0143967 *  
-    ## ptransp            0.039846556    0.030599367  1.3022             0.1928474    
-    ## phome              0.057846543    0.014007596  4.1297       0.0000363307406 ***
-    ## debt               0.000016335    0.000221913  0.0736             0.9413204    
-    ## govsubs           -0.001308436    0.002193381 -0.5965             0.5508157    
-    ## inval           -107.128263265   87.673509503 -1.2219             0.2217454    
-    ## factor(status)2  -17.335792170   74.552970413 -0.2325             0.8161265    
-    ## factor(status)3  615.694006055  165.448464842  3.7214             0.0001981 ***
-    ## factor(status)4  271.771639200  129.693102117  2.0955             0.0361267 *  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-# Построение регрессий
-
-## Модель 2: с логарифмированным доходом
-
-### Зависимая перменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
-
-``` r
-model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + factor(status), data = x)
-cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
-coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
-```
+    model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
+                             + debt + govsubs + inval + factor(status), data = x)
+    cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
+    coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 
     ## 
     ## z test of coefficients:
@@ -1643,7 +1197,7 @@ coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
+### Зависимая переменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
 
 ``` r
 model2_fish <- lm(fish ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1678,7 +1232,7 @@ coeftest(model2_fish, df = Inf, vcov = cov_model2_fish)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней яиц, шт. (eggs)
+### Зависимая переменная: количество купленных за 7 дней яиц, шт. (eggs)
 
 ``` r
 model2_eggs <- lm(eggs ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1713,7 +1267,7 @@ coeftest(model2_eggs, df = Inf, vcov = cov_model2_eggs)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
+### Зависимая переменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
 
 ``` r
 model2_milk <- lm(milk ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1748,7 +1302,7 @@ coeftest(model2_milk, df = Inf, vcov = cov_model2_milk)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней овощей, кг. (vegetables)
+### Зависимая переменная: количество купленных за 7 дней овощей, кг. (vegetables)
 
 ``` r
 model2_vegetables <- lm(vegetables ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1783,7 +1337,7 @@ coeftest(model2_vegetables, df = Inf, vcov = cov_model2_vegetables)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
+### Зависимая переменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
 
 ``` r
 model2_fruits_and_berries <- lm(fruits_and_berries ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1818,7 +1372,7 @@ coeftest(model2_fruits_and_berries, df = Inf, vcov = cov_model2_fruits_and_berri
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
+### Зависимая переменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
 
 ``` r
 model2_cereals <- lm(cereals ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1853,7 +1407,7 @@ coeftest(model2_cereals, df = Inf, vcov = cov_model2_cereals)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней муки и мучных продуктов (flour)
+### Зависимая переменная: количество купленных за 7 дней муки и мучных продуктов (flour)
 
 ``` r
 model2_flour <- lm(flour ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1888,7 +1442,7 @@ coeftest(model2_flour, df = Inf, vcov = cov_model2_flour)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
+### Зависимая переменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
 
 ``` r
 model2_sweets <- lm(sweets ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1923,7 +1477,7 @@ coeftest(model2_sweets, df = Inf, vcov = cov_model2_sweets)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
+### Зависимая переменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
 
 ``` r
 model2_softdrinks <- lm(softdrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1958,7 +1512,7 @@ coeftest(model2_softdrinks, df = Inf, vcov = cov_model2_softdrinks)
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-### Зависимая перменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
+### Зависимая переменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
 
 ``` r
 model2_alcodrinks <- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -1994,59 +1548,6 @@ coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + factor(status), data = x)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                        Estimate      Std. Error z value              Pr(>|z|)
-    ## (Intercept)     -6117.261881261   775.952636347 -7.8836 0.0000000000000031821
-    ## log(income)       655.751839132    80.261579242  8.1702 0.0000000000000003079
-    ## diplom            -30.521932926    69.992033868 -0.4361             0.6627807
-    ## car               -11.749999614   117.646949823 -0.0999             0.9204435
-    ## plot_bi           270.596681047    80.465501968  3.3629             0.0007713
-    ## famsize           334.837316509    42.104429534  7.9525 0.0000000000000018272
-    ## water            -278.857933763   116.295028414 -2.3978             0.0164917
-    ## sanitation        556.429786922   127.938030282  4.3492 0.0000136626754404591
-    ## fridge            250.272707981    72.281748602  3.4625             0.0005353
-    ## internet          -21.872094407    73.180098797 -0.2989             0.7650313
-    ## pfuel               0.076304679     0.027015660  2.8245             0.0047360
-    ## ptransp             0.039315549     0.028786881  1.3657             0.1720189
-    ## phome               0.055632474     0.014137069  3.9352 0.0000831205906655373
-    ## debt                0.000002239     0.000232082  0.0096             0.9923024
-    ## govsubs            -0.002342264     0.002272144 -1.0309             0.3026062
-    ## inval            -113.282506316    87.758151648 -1.2908             0.1967561
-    ## factor(status)2   -42.023441462    74.329999947 -0.5654             0.5718268
-    ## factor(status)3   599.827302520   166.389751485  3.6050             0.0003122
-    ## factor(status)4   274.142856981   130.411781020  2.1021             0.0355417
-    ##                    
-    ## (Intercept)     ***
-    ## log(income)     ***
-    ## diplom             
-    ## car                
-    ## plot_bi         ***
-    ## famsize         ***
-    ## water           *  
-    ## sanitation      ***
-    ## fridge          ***
-    ## internet           
-    ## pfuel           ** 
-    ## ptransp            
-    ## phome           ***
-    ## debt               
-    ## govsubs            
-    ## inval              
-    ## factor(status)2    
-    ## factor(status)3 ***
-    ## factor(status)4 *  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
 # Analysing first quarter
 
 
@@ -2059,7 +1560,7 @@ first_quantile <- quantile(x$income, probs = 0.25)
 quantile1 <- x[x$income <= first_quantile, ]
 
 model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                               + debt + govsubs + inval + status, data = quantile1)
+                               + debt + govsubs + inval + factor(status), data = quantile1)
 cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
 coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 ```
@@ -2067,26 +1568,26 @@ coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
     ## 
     ## z test of coefficients:
     ## 
-    ##                  Estimate    Std. Error z value Pr(>|z|)  
-    ## (Intercept) -1.3474169546  2.5677949770 -0.5247  0.59977  
-    ## log(income)  0.3102227265  0.2633784636  1.1779  0.23885  
-    ## diplom      -0.0900419467  0.1691942195 -0.5322  0.59460  
-    ## car          0.3470628439  0.4108077223  0.8448  0.39821  
-    ## plot_bi      0.1494133983  0.1479758251  1.0097  0.31263  
-    ## famsize      0.1800089818  0.1321727058  1.3619  0.17322  
-    ## water       -0.3104984663  0.3589937555 -0.8649  0.38709  
-    ## sanitation  -0.0527230970  0.2805844181 -0.1879  0.85095  
-    ## fridge       0.3547512237  0.1456241732  2.4361  0.01485 *
-    ## internet    -0.2000167326  0.1563940192 -1.2789  0.20092  
-    ## pfuel       -0.0000528966  0.0001582721 -0.3342  0.73822  
-    ## ptransp      0.0000542383  0.0000743086  0.7299  0.46545  
-    ## phome        0.0000216903  0.0000402116  0.5394  0.58961  
-    ## debt         0.0000010370  0.0000013597  0.7627  0.44566  
-    ## govsubs      0.0000069832  0.0000091962  0.7594  0.44764  
-    ## inval       -0.1012322866  0.2316353044 -0.4370  0.66209  
-    ## status2      0.1742839112  0.1475436519  1.1812  0.23751  
-    ## status3      0.0682542645  0.3255267635  0.2097  0.83392  
-    ## status4      0.1848901937  0.2396801504  0.7714  0.44047  
+    ##                      Estimate    Std. Error z value Pr(>|z|)  
+    ## (Intercept)     -1.3474169546  2.5677949770 -0.5247  0.59977  
+    ## log(income)      0.3102227265  0.2633784636  1.1779  0.23885  
+    ## diplom          -0.0900419467  0.1691942195 -0.5322  0.59460  
+    ## car              0.3470628439  0.4108077223  0.8448  0.39821  
+    ## plot_bi          0.1494133983  0.1479758251  1.0097  0.31263  
+    ## famsize          0.1800089818  0.1321727058  1.3619  0.17322  
+    ## water           -0.3104984663  0.3589937555 -0.8649  0.38709  
+    ## sanitation      -0.0527230970  0.2805844181 -0.1879  0.85095  
+    ## fridge           0.3547512237  0.1456241732  2.4361  0.01485 *
+    ## internet        -0.2000167326  0.1563940192 -1.2789  0.20092  
+    ## pfuel           -0.0000528966  0.0001582721 -0.3342  0.73822  
+    ## ptransp          0.0000542383  0.0000743086  0.7299  0.46545  
+    ## phome            0.0000216903  0.0000402116  0.5394  0.58961  
+    ## debt             0.0000010370  0.0000013597  0.7627  0.44566  
+    ## govsubs          0.0000069832  0.0000091962  0.7594  0.44764  
+    ## inval           -0.1012322866  0.2316353044 -0.4370  0.66209  
+    ## factor(status)2  0.1742839112  0.1475436519  1.1812  0.23751  
+    ## factor(status)3  0.0682542645  0.3255267635  0.2097  0.83392  
+    ## factor(status)4  0.1848901937  0.2396801504  0.7714  0.44047  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -2417,39 +1918,6 @@ coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
     ## status2      0.0535255362  0.0948073247  0.5646  0.57237  
     ## status3     -0.0531132318  0.1122902085 -0.4730  0.63621  
     ## status4      0.3064920790  0.2344230917  1.3074  0.19107  
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile1)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                   Estimate     Std. Error z value  Pr(>|z|)    
-    ## (Intercept) -2491.77895693  1450.85741385 -1.7175 0.0858965 .  
-    ## log(income)   323.02640165   150.28212044  2.1495 0.0315974 *  
-    ## diplom         53.10349638    85.75219569  0.6193 0.5357405    
-    ## car           343.00711293   256.02300847  1.3398 0.1803263    
-    ## plot_bi        66.65600843    82.78135879  0.8052 0.4207011    
-    ## famsize       239.27884715    73.20921081  3.2684 0.0010815 ** 
-    ## water        -102.75833311   161.97195961 -0.6344 0.5258064    
-    ## sanitation    117.68736555   130.79669980  0.8998 0.3682410    
-    ## fridge        279.62186819    75.75363268  3.6912 0.0002232 ***
-    ## internet      -96.13086427    81.72091819 -1.1763 0.2394626    
-    ## pfuel           0.02115484     0.09159243  0.2310 0.8173404    
-    ## ptransp         0.10623806     0.04242090  2.5044 0.0122666 *  
-    ## phome           0.03899862     0.02031364  1.9198 0.0548801 .  
-    ## debt            0.00047190     0.00060264  0.7830 0.4335986    
-    ## govsubs         0.00289464     0.00520240  0.5564 0.5779348    
-    ## inval        -147.68732216   114.26296500 -1.2925 0.1961767    
-    ## status2        80.93317611    84.12342744  0.9621 0.3360112    
-    ## status3        16.52572632   187.06015514  0.0883 0.9296029    
-    ## status4       321.32354482   131.47343019  2.4440 0.0145247 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -2831,39 +2299,6 @@ coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile2)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value   Pr(>|z|)    
-    ## (Intercept) -4683.712751313  3963.925989368 -1.1816   0.237371    
-    ## log(income)   508.305062095   378.122880840  1.3443   0.178856    
-    ## diplom         50.316157326   123.329386305  0.4080   0.683287    
-    ## car            27.294005719   165.833907386  0.1646   0.869270    
-    ## plot_bi       354.794014364   144.077547042  2.4625   0.013796 *  
-    ## famsize       297.092675891    74.375709586  3.9945 0.00006483 ***
-    ## water         -28.929892936   190.124709235 -0.1522   0.879059    
-    ## sanitation    298.402615404   187.236629948  1.5937   0.110999    
-    ## fridge        325.665795150   111.023427250  2.9333   0.003354 ** 
-    ## internet      -54.903528249   133.092882210 -0.4125   0.679958    
-    ## pfuel           0.074583184     0.034338345  2.1720   0.029855 *  
-    ## ptransp         0.011420259     0.045098573  0.2532   0.800091    
-    ## phome           0.064245921     0.028510436  2.2534   0.024233 *  
-    ## debt           -0.000078688     0.000266975 -0.2947   0.768193    
-    ## govsubs        -0.000942838     0.004034600 -0.2337   0.815227    
-    ## inval          33.405847218   157.888992892  0.2116   0.832436    
-    ## status2         1.332093977   131.335439321  0.0101   0.991907    
-    ## status3       482.940768910   214.423835579  2.2523   0.024305 *  
-    ## status4       108.148562170   180.807231279  0.5981   0.549745    
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
 ####################################################################################################################################
 ```
 
@@ -2881,7 +2316,7 @@ quantile3 <- x[x$income > second_quantile & x$income <= third_quantile, ]
 
 
 model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
 coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 ```
@@ -2889,32 +2324,32 @@ coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value   Pr(>|z|)    
-    ## (Intercept) -10.72113011991  10.83082572018 -0.9899    0.32224    
-    ## log(income)   1.14602551924   0.99232288000  1.1549    0.24813    
-    ## diplom       -0.41010475488   0.22244508811 -1.8436    0.06524 .  
-    ## car          -0.01905371486   0.34647373056 -0.0550    0.95614    
-    ## plot_bi       0.06203843328   0.30796981744  0.2014    0.84035    
-    ## famsize       0.49409484920   0.12614186060  3.9170 0.00008967 ***
-    ## water        -0.26683937413   0.45282743628 -0.5893    0.55568    
-    ## sanitation    0.68963883897   0.41594495670  1.6580    0.09732 .  
-    ## fridge       -0.38694396711   0.26419624945 -1.4646    0.14303    
-    ## internet      0.12595382299   0.36389729597  0.3461    0.72925    
-    ## pfuel         0.00012563089   0.00008836886  1.4217    0.15512    
-    ## ptransp       0.00010140427   0.00009713660  1.0439    0.29652    
-    ## phome         0.00003596304   0.00004390170  0.8192    0.41269    
-    ## debt         -0.00000061833   0.00000048346 -1.2790    0.20091    
-    ## govsubs       0.00000336660   0.00000591320  0.5693    0.56913    
-    ## inval        -0.30959600490   0.29014487991 -1.0670    0.28595    
-    ## status2       0.11514985004   0.25703298366  0.4480    0.65416    
-    ## status3       1.21190930905   0.52701206525  2.2996    0.02147 *  
-    ## status4       0.25607429287   0.39708605747  0.6449    0.51900    
+    ##                        Estimate      Std. Error z value   Pr(>|z|)    
+    ## (Intercept)     -10.72113011991  10.83082572018 -0.9899    0.32224    
+    ## log(income)       1.14602551924   0.99232288000  1.1549    0.24813    
+    ## diplom           -0.41010475488   0.22244508811 -1.8436    0.06524 .  
+    ## car              -0.01905371486   0.34647373056 -0.0550    0.95614    
+    ## plot_bi           0.06203843328   0.30796981744  0.2014    0.84035    
+    ## famsize           0.49409484920   0.12614186060  3.9170 0.00008967 ***
+    ## water            -0.26683937413   0.45282743628 -0.5893    0.55568    
+    ## sanitation        0.68963883897   0.41594495670  1.6580    0.09732 .  
+    ## fridge           -0.38694396711   0.26419624945 -1.4646    0.14303    
+    ## internet          0.12595382299   0.36389729597  0.3461    0.72925    
+    ## pfuel             0.00012563089   0.00008836886  1.4217    0.15512    
+    ## ptransp           0.00010140427   0.00009713660  1.0439    0.29652    
+    ## phome             0.00003596304   0.00004390170  0.8192    0.41269    
+    ## debt             -0.00000061833   0.00000048346 -1.2790    0.20091    
+    ## govsubs           0.00000336660   0.00000591320  0.5693    0.56913    
+    ## inval            -0.30959600490   0.29014487991 -1.0670    0.28595    
+    ## factor(status)2   0.11514985004   0.25703298366  0.4480    0.65416    
+    ## factor(status)3   1.21190930905   0.52701206525  2.2996    0.02147 *  
+    ## factor(status)4   0.25607429287   0.39708605747  0.6449    0.51900    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_fish <- lm(fish ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_fish <- vcovHC(model2_fish, type = "HC0")
 coeftest(model2_fish, df = Inf, vcov = cov_model2_fish)
 ```
@@ -2922,32 +2357,32 @@ coeftest(model2_fish, df = Inf, vcov = cov_model2_fish)
     ## 
     ## z test of coefficients:
     ## 
-    ##                   Estimate     Std. Error z value Pr(>|z|)  
-    ## (Intercept) -4.53624733707  3.19604137146 -1.4193  0.15580  
-    ## log(income)  0.45416506604  0.29420715305  1.5437  0.12266  
-    ## diplom      -0.05791770236  0.07172141206 -0.8075  0.41936  
-    ## car         -0.05778545417  0.10565282001 -0.5469  0.58442  
-    ## plot_bi      0.05668041527  0.07698020294  0.7363  0.46155  
-    ## famsize      0.05954704581  0.03023933591  1.9692  0.04893 *
-    ## water       -0.24848897795  0.16479062840 -1.5079  0.13158  
-    ## sanitation   0.16156317341  0.11651834338  1.3866  0.16557  
-    ## fridge      -0.10564718818  0.08265527294 -1.2782  0.20119  
-    ## internet     0.00097166631  0.09214765923  0.0105  0.99159  
-    ## pfuel        0.00002441298  0.00002085315  1.1707  0.24172  
-    ## ptransp      0.00001804567  0.00002165520  0.8333  0.40467  
-    ## phome       -0.00000446586  0.00001141375 -0.3913  0.69560  
-    ## debt        -0.00000023915  0.00000012178 -1.9638  0.04956 *
-    ## govsubs      0.00000378406  0.00000196352  1.9272  0.05396 .
-    ## inval       -0.04151589300  0.08945574535 -0.4641  0.64258  
-    ## status2     -0.06932750129  0.08408227571 -0.8245  0.40964  
-    ## status3      0.08112304929  0.17064317972  0.4754  0.63450  
-    ## status4      0.14969277904  0.14285122758  1.0479  0.29469  
+    ##                       Estimate     Std. Error z value Pr(>|z|)  
+    ## (Intercept)     -4.53624733707  3.19604137146 -1.4193  0.15580  
+    ## log(income)      0.45416506604  0.29420715305  1.5437  0.12266  
+    ## diplom          -0.05791770236  0.07172141206 -0.8075  0.41936  
+    ## car             -0.05778545417  0.10565282001 -0.5469  0.58442  
+    ## plot_bi          0.05668041527  0.07698020294  0.7363  0.46155  
+    ## famsize          0.05954704581  0.03023933591  1.9692  0.04893 *
+    ## water           -0.24848897795  0.16479062840 -1.5079  0.13158  
+    ## sanitation       0.16156317341  0.11651834338  1.3866  0.16557  
+    ## fridge          -0.10564718818  0.08265527294 -1.2782  0.20119  
+    ## internet         0.00097166631  0.09214765923  0.0105  0.99159  
+    ## pfuel            0.00002441298  0.00002085315  1.1707  0.24172  
+    ## ptransp          0.00001804567  0.00002165520  0.8333  0.40467  
+    ## phome           -0.00000446586  0.00001141375 -0.3913  0.69560  
+    ## debt            -0.00000023915  0.00000012178 -1.9638  0.04956 *
+    ## govsubs          0.00000378406  0.00000196352  1.9272  0.05396 .
+    ## inval           -0.04151589300  0.08945574535 -0.4641  0.64258  
+    ## factor(status)2 -0.06932750129  0.08408227571 -0.8245  0.40964  
+    ## factor(status)3  0.08112304929  0.17064317972  0.4754  0.63450  
+    ## factor(status)4  0.14969277904  0.14285122758  1.0479  0.29469  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_eggs<- lm(eggs ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + status, data = quantile3)
+                 + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_eggs <- vcovHC(model2_eggs, type = "HC0")
 coeftest(model2_eggs, df = Inf, vcov = cov_model2_eggs)
 ```
@@ -2955,32 +2390,32 @@ coeftest(model2_eggs, df = Inf, vcov = cov_model2_eggs)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value Pr(>|z|)  
-    ## (Intercept) -65.89180160302  38.87107353193 -1.6951  0.09005 .
-    ## log(income)   6.47001111287   3.54774362423  1.8237  0.06820 .
-    ## diplom        0.62079952550   0.91965771179  0.6750  0.49965  
-    ## car          -2.95451549801   1.28953696413 -2.2911  0.02196 *
-    ## plot_bi      -0.02635639115   1.04415094702 -0.0252  0.97986  
-    ## famsize       1.12990211260   0.52383361617  2.1570  0.03101 *
-    ## water         0.12443631578   1.97148464856  0.0631  0.94967  
-    ## sanitation    1.90800848564   1.64605161746  1.1591  0.24640  
-    ## fridge       -0.15088540349   1.01273595913 -0.1490  0.88156  
-    ## internet     -0.64790845531   1.41622658200 -0.4575  0.64732  
-    ## pfuel         0.00036861025   0.00027536709  1.3386  0.18070  
-    ## ptransp       0.00025755772   0.00032988164  0.7808  0.43494  
-    ## phome         0.00028093248   0.00016245468  1.7293  0.08376 .
-    ## debt         -0.00000010004   0.00000190663 -0.0525  0.95816  
-    ## govsubs       0.00001221442   0.00002451151  0.4983  0.61826  
-    ## inval        -0.59863902494   1.17242641013 -0.5106  0.60963  
-    ## status2       2.25704976495   0.97977968606  2.3036  0.02124 *
-    ## status3       1.44942537464   1.81135243337  0.8002  0.42360  
-    ## status4      -0.49168800495   1.68590751209 -0.2916  0.77056  
+    ##                        Estimate      Std. Error z value Pr(>|z|)  
+    ## (Intercept)     -65.89180160302  38.87107353193 -1.6951  0.09005 .
+    ## log(income)       6.47001111287   3.54774362423  1.8237  0.06820 .
+    ## diplom            0.62079952550   0.91965771179  0.6750  0.49965  
+    ## car              -2.95451549801   1.28953696413 -2.2911  0.02196 *
+    ## plot_bi          -0.02635639115   1.04415094702 -0.0252  0.97986  
+    ## famsize           1.12990211260   0.52383361617  2.1570  0.03101 *
+    ## water             0.12443631578   1.97148464856  0.0631  0.94967  
+    ## sanitation        1.90800848564   1.64605161746  1.1591  0.24640  
+    ## fridge           -0.15088540349   1.01273595913 -0.1490  0.88156  
+    ## internet         -0.64790845531   1.41622658200 -0.4575  0.64732  
+    ## pfuel             0.00036861025   0.00027536709  1.3386  0.18070  
+    ## ptransp           0.00025755772   0.00032988164  0.7808  0.43494  
+    ## phome             0.00028093248   0.00016245468  1.7293  0.08376 .
+    ## debt             -0.00000010004   0.00000190663 -0.0525  0.95816  
+    ## govsubs           0.00001221442   0.00002451151  0.4983  0.61826  
+    ## inval            -0.59863902494   1.17242641013 -0.5106  0.60963  
+    ## factor(status)2   2.25704976495   0.97977968606  2.3036  0.02124 *
+    ## factor(status)3   1.44942537464   1.81135243337  0.8002  0.42360  
+    ## factor(status)4  -0.49168800495   1.68590751209 -0.2916  0.77056  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_milk<- lm(milk ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + status, data = quantile3)
+                 + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_milk <- vcovHC(model2_milk, type = "HC0")
 coeftest(model2_milk, df = Inf, vcov = cov_model2_milk)
 ```
@@ -2988,32 +2423,32 @@ coeftest(model2_milk, df = Inf, vcov = cov_model2_milk)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value  Pr(>|z|)    
-    ## (Intercept) -16.12346319458  12.23823304827 -1.3175 0.1876823    
-    ## log(income)   1.48303912028   1.13565240166  1.3059 0.1915894    
-    ## diplom        0.33916815766   0.26264971265  1.2913 0.1965883    
-    ## car           0.17129042806   0.35957400530  0.4764 0.6338105    
-    ## plot_bi       0.06895503595   0.29295932746  0.2354 0.8139184    
-    ## famsize       0.62374555277   0.17771630990  3.5098 0.0004485 ***
-    ## water        -1.14222996299   0.52787769381 -2.1638 0.0304785 *  
-    ## sanitation    1.51075835351   0.49687901277  3.0405 0.0023619 ** 
-    ## fridge        0.11824750646   0.27275574853  0.4335 0.6646306    
-    ## internet      0.00519831676   0.31517439649  0.0165 0.9868407    
-    ## pfuel         0.00006748026   0.00006659514  1.0133 0.3109211    
-    ## ptransp       0.00014396118   0.00008478361  1.6980 0.0895109 .  
-    ## phome         0.00009666858   0.00005234323  1.8468 0.0647731 .  
-    ## debt          0.00000112291   0.00000078932  1.4226 0.1548408    
-    ## govsubs       0.00001803677   0.00000713307  2.5286 0.0114515 *  
-    ## inval         0.42856375682   0.33802765503  1.2678 0.2048564    
-    ## status2       0.07991577856   0.28928394933  0.2763 0.7823532    
-    ## status3       1.68338766207   0.69145602304  2.4346 0.0149101 *  
-    ## status4       0.98342327575   0.51496178141  1.9097 0.0561717 .  
+    ##                        Estimate      Std. Error z value  Pr(>|z|)    
+    ## (Intercept)     -16.12346319458  12.23823304827 -1.3175 0.1876823    
+    ## log(income)       1.48303912028   1.13565240166  1.3059 0.1915894    
+    ## diplom            0.33916815766   0.26264971265  1.2913 0.1965883    
+    ## car               0.17129042806   0.35957400530  0.4764 0.6338105    
+    ## plot_bi           0.06895503595   0.29295932746  0.2354 0.8139184    
+    ## famsize           0.62374555277   0.17771630990  3.5098 0.0004485 ***
+    ## water            -1.14222996299   0.52787769381 -2.1638 0.0304785 *  
+    ## sanitation        1.51075835351   0.49687901277  3.0405 0.0023619 ** 
+    ## fridge            0.11824750646   0.27275574853  0.4335 0.6646306    
+    ## internet          0.00519831676   0.31517439649  0.0165 0.9868407    
+    ## pfuel             0.00006748026   0.00006659514  1.0133 0.3109211    
+    ## ptransp           0.00014396118   0.00008478361  1.6980 0.0895109 .  
+    ## phome             0.00009666858   0.00005234323  1.8468 0.0647731 .  
+    ## debt              0.00000112291   0.00000078932  1.4226 0.1548408    
+    ## govsubs           0.00001803677   0.00000713307  2.5286 0.0114515 *  
+    ## inval             0.42856375682   0.33802765503  1.2678 0.2048564    
+    ## factor(status)2   0.07991577856   0.28928394933  0.2763 0.7823532    
+    ## factor(status)3   1.68338766207   0.69145602304  2.4346 0.0149101 *  
+    ## factor(status)4   0.98342327575   0.51496178141  1.9097 0.0561717 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_vegetables<- lm(vegetables ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_vegetables <- vcovHC(model2_vegetables, type = "HC0")
 coeftest(model2_vegetables, df = Inf, vcov = cov_model2_vegetables)
 ```
@@ -3021,32 +2456,32 @@ coeftest(model2_vegetables, df = Inf, vcov = cov_model2_vegetables)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value  Pr(>|z|)    
-    ## (Intercept) -32.57808854973  33.83875288026 -0.9627 0.3356755    
-    ## log(income)   3.65568693989   3.15879827102  1.1573 0.2471486    
-    ## diplom        0.00027748476   0.75886850344  0.0004 0.9997082    
-    ## car          -0.29358782170   1.01319743437 -0.2898 0.7719970    
-    ## plot_bi      -3.05270812405   0.81995165148 -3.7230 0.0001968 ***
-    ## famsize       0.42646098946   0.30715730177  1.3884 0.1650115    
-    ## water        -0.56672353654   1.78219842983 -0.3180 0.7504916    
-    ## sanitation   -1.54429000568   1.60365667269 -0.9630 0.3355573    
-    ## fridge       -0.37032019180   1.12449918401 -0.3293 0.7419137    
-    ## internet     -0.78226253732   1.38939578644 -0.5630 0.5734189    
-    ## pfuel        -0.00009822202   0.00019541086 -0.5026 0.6152149    
-    ## ptransp       0.00050112279   0.00035571847  1.4088 0.1589055    
-    ## phome        -0.00001416984   0.00013858028 -0.1023 0.9185582    
-    ## debt         -0.00000193004   0.00000056751 -3.4009 0.0006716 ***
-    ## govsubs       0.00002032638   0.00002568540  0.7914 0.4287344    
-    ## inval        -1.55936282837   1.02921664279 -1.5151 0.1297479    
-    ## status2      -0.40212584947   0.96613991188 -0.4162 0.6772497    
-    ## status3      -0.53563547551   1.31429630480 -0.4075 0.6836074    
-    ## status4      -2.32187157444   1.39255643945 -1.6673 0.0954459 .  
+    ##                        Estimate      Std. Error z value  Pr(>|z|)    
+    ## (Intercept)     -32.57808854973  33.83875288026 -0.9627 0.3356755    
+    ## log(income)       3.65568693989   3.15879827102  1.1573 0.2471486    
+    ## diplom            0.00027748476   0.75886850344  0.0004 0.9997082    
+    ## car              -0.29358782170   1.01319743437 -0.2898 0.7719970    
+    ## plot_bi          -3.05270812405   0.81995165148 -3.7230 0.0001968 ***
+    ## famsize           0.42646098946   0.30715730177  1.3884 0.1650115    
+    ## water            -0.56672353654   1.78219842983 -0.3180 0.7504916    
+    ## sanitation       -1.54429000568   1.60365667269 -0.9630 0.3355573    
+    ## fridge           -0.37032019180   1.12449918401 -0.3293 0.7419137    
+    ## internet         -0.78226253732   1.38939578644 -0.5630 0.5734189    
+    ## pfuel            -0.00009822202   0.00019541086 -0.5026 0.6152149    
+    ## ptransp           0.00050112279   0.00035571847  1.4088 0.1589055    
+    ## phome            -0.00001416984   0.00013858028 -0.1023 0.9185582    
+    ## debt             -0.00000193004   0.00000056751 -3.4009 0.0006716 ***
+    ## govsubs           0.00002032638   0.00002568540  0.7914 0.4287344    
+    ## inval            -1.55936282837   1.02921664279 -1.5151 0.1297479    
+    ## factor(status)2  -0.40212584947   0.96613991188 -0.4162 0.6772497    
+    ## factor(status)3  -0.53563547551   1.31429630480 -0.4075 0.6836074    
+    ## factor(status)4  -2.32187157444   1.39255643945 -1.6673 0.0954459 .  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_fruits_and_berries<- lm(fruits_and_berries ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                               + debt + govsubs + inval + status, data = quantile3)
+                               + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_fruits_and_berries <- vcovHC(model2_fruits_and_berries, type = "HC0")
 coeftest(model2_fruits_and_berries, df = Inf, vcov = cov_model2_fruits_and_berries)
 ```
@@ -3054,32 +2489,32 @@ coeftest(model2_fruits_and_berries, df = Inf, vcov = cov_model2_fruits_and_berri
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value Pr(>|z|)   
-    ## (Intercept) -36.22768082622  14.31586111513 -2.5306 0.011387 * 
-    ## log(income)   3.39030175317   1.31499513054  2.5782 0.009932 **
-    ## diplom       -0.07699915924   0.28348773797 -0.2716 0.785919   
-    ## car          -0.41206354917   0.44168132702 -0.9329 0.350849   
-    ## plot_bi      -0.48872054003   0.32291195579 -1.5135 0.130158   
-    ## famsize       0.18505834120   0.12040441896  1.5370 0.124300   
-    ## water         0.19901516802   0.50269061312  0.3959 0.692179   
-    ## sanitation    0.20584872387   0.53230608741  0.3867 0.698970   
-    ## fridge        0.55167582652   0.31443435982  1.7545 0.079344 . 
-    ## internet      0.71672725679   0.33088629503  2.1661 0.030305 * 
-    ## pfuel         0.00017544575   0.00009564188  1.8344 0.066594 . 
-    ## ptransp       0.00017960235   0.00011827358  1.5185 0.128880   
-    ## phome        -0.00005987090   0.00005040379 -1.1878 0.234902   
-    ## debt         -0.00000094112   0.00000051779 -1.8176 0.069127 . 
-    ## govsubs       0.00002112386   0.00000758648  2.7844 0.005363 **
-    ## inval        -0.15662836433   0.38118037645 -0.4109 0.681143   
-    ## status2      -0.64812691680   0.30991607119 -2.0913 0.036501 * 
-    ## status3      -0.23887637499   0.57539010661 -0.4152 0.678028   
-    ## status4      -0.60950465704   0.49599099941 -1.2289 0.219123   
+    ##                        Estimate      Std. Error z value Pr(>|z|)   
+    ## (Intercept)     -36.22768082622  14.31586111513 -2.5306 0.011387 * 
+    ## log(income)       3.39030175317   1.31499513054  2.5782 0.009932 **
+    ## diplom           -0.07699915924   0.28348773797 -0.2716 0.785919   
+    ## car              -0.41206354917   0.44168132702 -0.9329 0.350849   
+    ## plot_bi          -0.48872054003   0.32291195579 -1.5135 0.130158   
+    ## famsize           0.18505834120   0.12040441896  1.5370 0.124300   
+    ## water             0.19901516802   0.50269061312  0.3959 0.692179   
+    ## sanitation        0.20584872387   0.53230608741  0.3867 0.698970   
+    ## fridge            0.55167582652   0.31443435982  1.7545 0.079344 . 
+    ## internet          0.71672725679   0.33088629503  2.1661 0.030305 * 
+    ## pfuel             0.00017544575   0.00009564188  1.8344 0.066594 . 
+    ## ptransp           0.00017960235   0.00011827358  1.5185 0.128880   
+    ## phome            -0.00005987090   0.00005040379 -1.1878 0.234902   
+    ## debt             -0.00000094112   0.00000051779 -1.8176 0.069127 . 
+    ## govsubs           0.00002112386   0.00000758648  2.7844 0.005363 **
+    ## inval            -0.15662836433   0.38118037645 -0.4109 0.681143   
+    ## factor(status)2  -0.64812691680   0.30991607119 -2.0913 0.036501 * 
+    ## factor(status)3  -0.23887637499   0.57539010661 -0.4152 0.678028   
+    ## factor(status)4  -0.60950465704   0.49599099941 -1.2289 0.219123   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_cereals<- lm(cereals ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                    + debt + govsubs + inval + status, data = quantile3)
+                    + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_cereals <- vcovHC(model2_cereals, type = "HC0")
 coeftest(model2_cereals, df = Inf, vcov = cov_model2_cereals)
 ```
@@ -3087,32 +2522,32 @@ coeftest(model2_cereals, df = Inf, vcov = cov_model2_cereals)
     ## 
     ## z test of coefficients:
     ## 
-    ##                   Estimate     Std. Error z value   Pr(>|z|)    
-    ## (Intercept)  0.81304974271  3.40881050583  0.2385   0.811482    
-    ## log(income) -0.08312151066  0.31119018960 -0.2671   0.789386    
-    ## diplom      -0.04290809352  0.08377545277 -0.5122   0.608525    
-    ## car         -0.20038714146  0.11078336285 -1.8088   0.070479 .  
-    ## plot_bi      0.21844444247  0.11757574246  1.8579   0.063183 .  
-    ## famsize      0.15916974833  0.03671030870  4.3358 0.00001452 ***
-    ## water       -0.11862353098  0.14408783057 -0.8233   0.410353    
-    ## sanitation   0.41544294819  0.13701373534  3.0321   0.002428 ** 
-    ## fridge       0.03304863301  0.08385877489  0.3941   0.693508    
-    ## internet     0.00755188898  0.10025523696  0.0753   0.939955    
-    ## pfuel        0.00002020431  0.00002176019  0.9285   0.353149    
-    ## ptransp      0.00003921947  0.00002912123  1.3468   0.178056    
-    ## phome        0.00000022624  0.00001350385  0.0168   0.986633    
-    ## debt        -0.00000025067  0.00000009864 -2.5412   0.011046 *  
-    ## govsubs     -0.00000171868  0.00000237215 -0.7245   0.468742    
-    ## inval       -0.14524288652  0.09346659974 -1.5540   0.120195    
-    ## status2      0.15458274285  0.10701269092  1.4445   0.148591    
-    ## status3      0.20239560051  0.17122641500  1.1820   0.237192    
-    ## status4      0.27905223978  0.12971202202  2.1513   0.031451 *  
+    ##                       Estimate     Std. Error z value   Pr(>|z|)    
+    ## (Intercept)      0.81304974271  3.40881050583  0.2385   0.811482    
+    ## log(income)     -0.08312151066  0.31119018960 -0.2671   0.789386    
+    ## diplom          -0.04290809352  0.08377545277 -0.5122   0.608525    
+    ## car             -0.20038714146  0.11078336285 -1.8088   0.070479 .  
+    ## plot_bi          0.21844444247  0.11757574246  1.8579   0.063183 .  
+    ## famsize          0.15916974833  0.03671030870  4.3358 0.00001452 ***
+    ## water           -0.11862353098  0.14408783057 -0.8233   0.410353    
+    ## sanitation       0.41544294819  0.13701373534  3.0321   0.002428 ** 
+    ## fridge           0.03304863301  0.08385877489  0.3941   0.693508    
+    ## internet         0.00755188898  0.10025523696  0.0753   0.939955    
+    ## pfuel            0.00002020431  0.00002176019  0.9285   0.353149    
+    ## ptransp          0.00003921947  0.00002912123  1.3468   0.178056    
+    ## phome            0.00000022624  0.00001350385  0.0168   0.986633    
+    ## debt            -0.00000025067  0.00000009864 -2.5412   0.011046 *  
+    ## govsubs         -0.00000171868  0.00000237215 -0.7245   0.468742    
+    ## inval           -0.14524288652  0.09346659974 -1.5540   0.120195    
+    ## factor(status)2  0.15458274285  0.10701269092  1.4445   0.148591    
+    ## factor(status)3  0.20239560051  0.17122641500  1.1820   0.237192    
+    ## factor(status)4  0.27905223978  0.12971202202  2.1513   0.031451 *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_flour<- lm(flour ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_flour <- vcovHC(model2_flour, type = "HC0")
 coeftest(model2_flour, df = Inf, vcov = cov_model2_flour)
 ```
@@ -3120,32 +2555,32 @@ coeftest(model2_flour, df = Inf, vcov = cov_model2_flour)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value        Pr(>|z|)    
-    ## (Intercept) -17.97417005283  12.56509063481 -1.4305       0.1525780    
-    ## log(income)   1.50029018988   1.14634605920  1.3088       0.1906162    
-    ## diplom       -0.26742770130   0.24883444269 -1.0747       0.2824995    
-    ## car          -0.45350256275   0.43513484844 -1.0422       0.2973136    
-    ## plot_bi       0.59083152567   0.29992470307  1.9699       0.0488461 *  
-    ## famsize       1.12535132285   0.17898943813  6.2872 0.0000000003231 ***
-    ## water         1.29984235491   0.59828835278  2.1726       0.0298103 *  
-    ## sanitation    0.01791466571   0.53860960704  0.0333       0.9734665    
-    ## fridge        0.17343953960   0.27201459718  0.6376       0.5237268    
-    ## internet      0.20522205739   0.32791136522  0.6258       0.5314159    
-    ## pfuel         0.00003706561   0.00008870459  0.4179       0.6760535    
-    ## ptransp       0.00011683944   0.00009720248  1.2020       0.2293553    
-    ## phome        -0.00005076808   0.00004767327 -1.0649       0.2869134    
-    ## debt         -0.00000027486   0.00000044421 -0.6188       0.5360756    
-    ## govsubs      -0.00000298379   0.00000708277 -0.4213       0.6735544    
-    ## inval         0.10522295302   0.39399365798  0.2671       0.7894171    
-    ## status2       0.99980365962   0.27323965499  3.6591       0.0002531 ***
-    ## status3       2.56323643682   0.75374044641  3.4007       0.0006722 ***
-    ## status4       2.60899098139   0.50499538232  5.1664 0.0000002386892 ***
+    ##                        Estimate      Std. Error z value        Pr(>|z|)    
+    ## (Intercept)     -17.97417005283  12.56509063481 -1.4305       0.1525780    
+    ## log(income)       1.50029018988   1.14634605920  1.3088       0.1906162    
+    ## diplom           -0.26742770130   0.24883444269 -1.0747       0.2824995    
+    ## car              -0.45350256275   0.43513484844 -1.0422       0.2973136    
+    ## plot_bi           0.59083152567   0.29992470307  1.9699       0.0488461 *  
+    ## famsize           1.12535132285   0.17898943813  6.2872 0.0000000003231 ***
+    ## water             1.29984235491   0.59828835278  2.1726       0.0298103 *  
+    ## sanitation        0.01791466571   0.53860960704  0.0333       0.9734665    
+    ## fridge            0.17343953960   0.27201459718  0.6376       0.5237268    
+    ## internet          0.20522205739   0.32791136522  0.6258       0.5314159    
+    ## pfuel             0.00003706561   0.00008870459  0.4179       0.6760535    
+    ## ptransp           0.00011683944   0.00009720248  1.2020       0.2293553    
+    ## phome            -0.00005076808   0.00004767327 -1.0649       0.2869134    
+    ## debt             -0.00000027486   0.00000044421 -0.6188       0.5360756    
+    ## govsubs          -0.00000298379   0.00000708277 -0.4213       0.6735544    
+    ## inval             0.10522295302   0.39399365798  0.2671       0.7894171    
+    ## factor(status)2   0.99980365962   0.27323965499  3.6591       0.0002531 ***
+    ## factor(status)3   2.56323643682   0.75374044641  3.4007       0.0006722 ***
+    ## factor(status)4   2.60899098139   0.50499538232  5.1664 0.0000002386892 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_sweets<- lm(sweets ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                   + debt + govsubs + inval + status, data = quantile3)
+                   + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_sweets <- vcovHC(model2_sweets, type = "HC0")
 coeftest(model2_sweets, df = Inf, vcov = cov_model2_sweets)
 ```
@@ -3153,32 +2588,32 @@ coeftest(model2_sweets, df = Inf, vcov = cov_model2_sweets)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value  Pr(>|z|)    
-    ## (Intercept) -10.58501766163  11.37025810096 -0.9309 0.3518851    
-    ## log(income)   1.01189246688   1.04957970475  0.9641 0.3349993    
-    ## diplom       -0.44098648815   0.18202591214 -2.4227 0.0154074 *  
-    ## car          -0.61223129054   0.37854822253 -1.6173 0.1058105    
-    ## plot_bi       0.56301397529   0.21823469829  2.5799 0.0098842 ** 
-    ## famsize       0.35632894118   0.10628325665  3.3526 0.0008005 ***
-    ## water         0.10690563284   0.57133664327  0.1871 0.8515705    
-    ## sanitation    0.01021333172   0.49053979219  0.0208 0.9833888    
-    ## fridge       -0.09375410463   0.25568039998 -0.3667 0.7138542    
-    ## internet      0.42860370941   0.28433195056  1.5074 0.1317066    
-    ## pfuel         0.00005733487   0.00007000184  0.8190 0.4127590    
-    ## ptransp       0.00006260823   0.00004696058  1.3332 0.1824635    
-    ## phome        -0.00004761922   0.00003914991 -1.2163 0.2238591    
-    ## debt         -0.00000033606   0.00000043443 -0.7736 0.4391773    
-    ## govsubs       0.00000554488   0.00000539602  1.0276 0.3041436    
-    ## inval        -0.68696938601   0.26710009785 -2.5720 0.0101126 *  
-    ## status2       0.09514018789   0.17019775113  0.5590 0.5761631    
-    ## status3       1.60930980166   0.49221260496  3.2695 0.0010772 ** 
-    ## status4       1.37843751337   0.46632376879  2.9560 0.0031169 ** 
+    ##                        Estimate      Std. Error z value  Pr(>|z|)    
+    ## (Intercept)     -10.58501766163  11.37025810096 -0.9309 0.3518851    
+    ## log(income)       1.01189246688   1.04957970475  0.9641 0.3349993    
+    ## diplom           -0.44098648815   0.18202591214 -2.4227 0.0154074 *  
+    ## car              -0.61223129054   0.37854822253 -1.6173 0.1058105    
+    ## plot_bi           0.56301397529   0.21823469829  2.5799 0.0098842 ** 
+    ## famsize           0.35632894118   0.10628325665  3.3526 0.0008005 ***
+    ## water             0.10690563284   0.57133664327  0.1871 0.8515705    
+    ## sanitation        0.01021333172   0.49053979219  0.0208 0.9833888    
+    ## fridge           -0.09375410463   0.25568039998 -0.3667 0.7138542    
+    ## internet          0.42860370941   0.28433195056  1.5074 0.1317066    
+    ## pfuel             0.00005733487   0.00007000184  0.8190 0.4127590    
+    ## ptransp           0.00006260823   0.00004696058  1.3332 0.1824635    
+    ## phome            -0.00004761922   0.00003914991 -1.2163 0.2238591    
+    ## debt             -0.00000033606   0.00000043443 -0.7736 0.4391773    
+    ## govsubs           0.00000554488   0.00000539602  1.0276 0.3041436    
+    ## inval            -0.68696938601   0.26710009785 -2.5720 0.0101126 *  
+    ## factor(status)2   0.09514018789   0.17019775113  0.5590 0.5761631    
+    ## factor(status)3   1.60930980166   0.49221260496  3.2695 0.0010772 ** 
+    ## factor(status)4   1.37843751337   0.46632376879  2.9560 0.0031169 ** 
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_softdrinks<- lm(softdrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_softdrinks <- vcovHC(model2_softdrinks, type = "HC0")
 coeftest(model2_softdrinks, df = Inf, vcov = cov_model2_softdrinks)
 ```
@@ -3186,32 +2621,32 @@ coeftest(model2_softdrinks, df = Inf, vcov = cov_model2_softdrinks)
     ## 
     ## z test of coefficients:
     ## 
-    ##                   Estimate     Std. Error z value Pr(>|z|)  
-    ## (Intercept) -8.00936899397  5.61057967252 -1.4275  0.15342  
-    ## log(income)  0.78569594124  0.51480633235  1.5262  0.12696  
-    ## diplom      -0.02876989284  0.10432356977 -0.2758  0.78272  
-    ## car         -0.16239254412  0.15860278176 -1.0239  0.30589  
-    ## plot_bi      0.15760902356  0.15281305360  1.0314  0.30236  
-    ## famsize      0.03478155407  0.06435725072  0.5404  0.58889  
-    ## water       -0.20333822333  0.27323892931 -0.7442  0.45677  
-    ## sanitation   0.18415595265  0.20832776242  0.8840  0.37671  
-    ## fridge      -0.03919578861  0.12479172485 -0.3141  0.75345  
-    ## internet    -0.01728608444  0.12831368695 -0.1347  0.89284  
-    ## pfuel        0.00004183547  0.00003238591  1.2918  0.19643  
-    ## ptransp      0.00006313726  0.00003953219  1.5971  0.11024  
-    ## phome       -0.00001299829  0.00001927861 -0.6742  0.50016  
-    ## debt         0.00000038350  0.00000033368  1.1493  0.25043  
-    ## govsubs     -0.00000580581  0.00000296104 -1.9607  0.04991 *
-    ## inval       -0.10051807076  0.10970911317 -0.9162  0.35955  
-    ## status2     -0.12335207145  0.10413468790 -1.1845  0.23620  
-    ## status3      1.01014579321  0.42260567631  2.3903  0.01684 *
-    ## status4      0.01861608875  0.18701145974  0.0995  0.92071  
+    ##                       Estimate     Std. Error z value Pr(>|z|)  
+    ## (Intercept)     -8.00936899397  5.61057967252 -1.4275  0.15342  
+    ## log(income)      0.78569594124  0.51480633235  1.5262  0.12696  
+    ## diplom          -0.02876989284  0.10432356977 -0.2758  0.78272  
+    ## car             -0.16239254412  0.15860278176 -1.0239  0.30589  
+    ## plot_bi          0.15760902356  0.15281305360  1.0314  0.30236  
+    ## famsize          0.03478155407  0.06435725072  0.5404  0.58889  
+    ## water           -0.20333822333  0.27323892931 -0.7442  0.45677  
+    ## sanitation       0.18415595265  0.20832776242  0.8840  0.37671  
+    ## fridge          -0.03919578861  0.12479172485 -0.3141  0.75345  
+    ## internet        -0.01728608444  0.12831368695 -0.1347  0.89284  
+    ## pfuel            0.00004183547  0.00003238591  1.2918  0.19643  
+    ## ptransp          0.00006313726  0.00003953219  1.5971  0.11024  
+    ## phome           -0.00001299829  0.00001927861 -0.6742  0.50016  
+    ## debt             0.00000038350  0.00000033368  1.1493  0.25043  
+    ## govsubs         -0.00000580581  0.00000296104 -1.9607  0.04991 *
+    ## inval           -0.10051807076  0.10970911317 -0.9162  0.35955  
+    ## factor(status)2 -0.12335207145  0.10413468790 -1.1845  0.23620  
+    ## factor(status)3  1.01014579321  0.42260567631  2.3903  0.01684 *
+    ## factor(status)4  0.01861608875  0.18701145974  0.0995  0.92071  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
 model2_alcodrinks<- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
 ```
@@ -3219,59 +2654,26 @@ coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
     ## 
     ## z test of coefficients:
     ## 
-    ##                    Estimate      Std. Error z value Pr(>|z|)   
-    ## (Intercept)  6.739499812642  4.969876387026  1.3561 0.175077   
-    ## log(income) -0.549426044351  0.456657483946 -1.2031 0.228919   
-    ## diplom      -0.070768888222  0.110317092054 -0.6415 0.521195   
-    ## car          0.245236118309  0.172249137347  1.4237 0.154525   
-    ## plot_bi     -0.076747122036  0.115795372941 -0.6628 0.507470   
-    ## famsize      0.066107079322  0.054075825334  1.2225 0.221523   
-    ## water       -0.172072364355  0.287066533306 -0.5994 0.548895   
-    ## sanitation  -0.111241577113  0.205642325462 -0.5409 0.588544   
-    ## fridge      -0.128909372430  0.115782764021 -1.1134 0.265548   
-    ## internet    -0.087519363568  0.147093853209 -0.5950 0.551850   
-    ## pfuel        0.000008602609  0.000034078966  0.2524 0.800707   
-    ## ptransp      0.000041365201  0.000035439065  1.1672 0.243121   
-    ## phome        0.000001221187  0.000015319621  0.0797 0.936465   
-    ## debt         0.000000036185  0.000000179563  0.2015 0.840295   
-    ## govsubs     -0.000000017387  0.000003335760 -0.0052 0.995841   
-    ## inval       -0.362697460519  0.137462209474 -2.6385 0.008327 **
-    ## status2      0.130613433197  0.113242848429  1.1534 0.248749   
-    ## status3      0.003712833576  0.279075712570  0.0133 0.989385   
-    ## status4     -0.026232441655  0.215608006607 -0.1217 0.903163   
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile3)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                    Estimate      Std. Error z value  Pr(>|z|)    
-    ## (Intercept) -16073.79444305   6131.08895291 -2.6217 0.0087496 ** 
-    ## log(income)   1559.43129735    562.81052390  2.7708 0.0055920 ** 
-    ## diplom        -120.47478085    132.65977906 -0.9081 0.3637998    
-    ## car           -268.56753296    200.03018976 -1.3426 0.1793902    
-    ## plot_bi        131.68963248    169.15012598  0.7785 0.4362525    
-    ## famsize        258.59050878     70.23776103  3.6816 0.0002317 ***
-    ## water         -490.61180616    256.92934418 -1.9095 0.0561950 .  
-    ## sanitation     703.44498939    234.08275217  3.0051 0.0026548 ** 
-    ## fridge         109.12419861    146.32239670  0.7458 0.4558008    
-    ## internet       261.88607184    202.34096850  1.2943 0.1955684    
-    ## pfuel            0.15464700      0.04911582  3.1486 0.0016404 ** 
-    ## ptransp          0.11615104      0.06722982  1.7277 0.0840471 .  
-    ## phome            0.04471118      0.02639579  1.6939 0.0902889 .  
-    ## debt            -0.00037963      0.00027721 -1.3695 0.1708519    
-    ## govsubs          0.00168483      0.00342132  0.4924 0.6224025    
-    ## inval         -181.17267278    158.20845500 -1.1452 0.2521463    
-    ## status2        107.44662717    153.39658076  0.7004 0.4836464    
-    ## status3       1312.17132008    351.90818499  3.7287 0.0001924 ***
-    ## status4        641.28176334    253.89682572  2.5258 0.0115449 *  
+    ##                        Estimate      Std. Error z value Pr(>|z|)   
+    ## (Intercept)      6.739499812642  4.969876387026  1.3561 0.175077   
+    ## log(income)     -0.549426044351  0.456657483946 -1.2031 0.228919   
+    ## diplom          -0.070768888222  0.110317092054 -0.6415 0.521195   
+    ## car              0.245236118309  0.172249137347  1.4237 0.154525   
+    ## plot_bi         -0.076747122036  0.115795372941 -0.6628 0.507470   
+    ## famsize          0.066107079322  0.054075825334  1.2225 0.221523   
+    ## water           -0.172072364355  0.287066533306 -0.5994 0.548895   
+    ## sanitation      -0.111241577113  0.205642325462 -0.5409 0.588544   
+    ## fridge          -0.128909372430  0.115782764021 -1.1134 0.265548   
+    ## internet        -0.087519363568  0.147093853209 -0.5950 0.551850   
+    ## pfuel            0.000008602609  0.000034078966  0.2524 0.800707   
+    ## ptransp          0.000041365201  0.000035439065  1.1672 0.243121   
+    ## phome            0.000001221187  0.000015319621  0.0797 0.936465   
+    ## debt             0.000000036185  0.000000179563  0.2015 0.840295   
+    ## govsubs         -0.000000017387  0.000003335760 -0.0052 0.995841   
+    ## inval           -0.362697460519  0.137462209474 -2.6385 0.008327 **
+    ## factor(status)2  0.130613433197  0.113242848429  1.1534 0.248749   
+    ## factor(status)3  0.003712833576  0.279075712570  0.0133 0.989385   
+    ## factor(status)4 -0.026232441655  0.215608006607 -0.1217 0.903163   
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -3651,39 +3053,6 @@ coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
     ## status2     -0.11375587478  0.16878985277 -0.6739 0.500343   
     ## status3     -0.46611404681  0.19151338740 -2.4338 0.014939 * 
     ## status4     -0.15751223706  0.25646790298 -0.6142 0.539110   
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-``` r
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile4)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-```
-
-    ## 
-    ## z test of coefficients:
-    ## 
-    ##                     Estimate       Std. Error z value       Pr(>|z|)    
-    ## (Intercept) -12717.461557727   4288.231975815 -2.9657       0.003020 ** 
-    ## log(income)   1194.742592533    372.932707411  3.2036       0.001357 ** 
-    ## diplom        -106.213751858    175.691745097 -0.6045       0.545481    
-    ## car             -7.626121534    243.368851868 -0.0313       0.975002    
-    ## plot_bi        402.317405831    199.308836306  2.0186       0.043533 *  
-    ## famsize        411.889863047     71.714201254  5.7435 0.000000009274 ***
-    ## water         -841.040937745    398.581973015 -2.1101       0.034851 *  
-    ## sanitation    1323.920363018    454.760254292  2.9112       0.003600 ** 
-    ## fridge         165.318065679    322.170763520  0.5131       0.607855    
-    ## internet       305.693689329    319.051144000  0.9581       0.337995    
-    ## pfuel            0.050572192      0.035510472  1.4241       0.154403    
-    ## ptransp          0.017418839      0.031933292  0.5455       0.585426    
-    ## phome            0.054929195      0.024858155  2.2097       0.027126 *  
-    ## debt             0.000087819      0.000352271  0.2493       0.803134    
-    ## govsubs         -0.006574050      0.004191702 -1.5683       0.116800    
-    ## inval         -128.482889488    250.859428353 -0.5122       0.608531    
-    ## status2       -342.898310100    224.707346977 -1.5260       0.127016    
-    ## status3        584.565814613    433.913022024  1.3472       0.177917    
-    ## status4        242.123231507    435.912409632  0.5554       0.578594    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
