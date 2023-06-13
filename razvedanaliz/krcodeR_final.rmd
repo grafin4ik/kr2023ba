@@ -211,13 +211,13 @@ t.test(x$alcodrinks ~ x$plot_bi)
 ```
 
 
-## Совместное распределение дохода в руб. и расходы на питание в руб.
+## Совместное распределение дохода в руб. и потребления овощей в руб.
 
 ```{r 12}
 x %>% 
-  ggplot(aes(x = income, y = sum_rub_buy)) +
+  ggplot(aes(x = income, y = vegetables)) +
   geom_jitter(width = 0.25, alpha = 0.5) +  
-  scale_y_continuous(name = "Расходы на питание в руб.") +
+  scale_y_continuous(name = "потребление овощей") +
   scale_x_continuous(name = "Доходы в руб.")
 
 ```
@@ -335,148 +335,11 @@ food_consumption_table
 ```
 ```
 
-
 # Построение регрессий 
 
-## Модель 1: линейная
+## Модель общая (доход логарифмируем)
 
-### Зависимая перменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
-
-
-```{r m1_meat1}
-
-model1_meat <- lm(meat ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_meat <- vcovHC(model1_meat, type = "HC0")
-coeftest(model1_meat, df = Inf, vcov = cov_model1_meat)
-
-vif(model1_meat)
-
-```
-
-
-### Зависимая перменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
-
-```{r m1_fish1}
-model1_fish <- lm(fish ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_fish <- vcovHC(model1_fish, type = "HC0")
-coeftest(model1_fish, df = Inf, vcov = cov_model1_fish)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней яиц, шт. (eggs)
-
-```{r m1_eggs1}
-model1_eggs <- lm(eggs ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_eggs <- vcovHC(model1_eggs, type = "HC0")
-coeftest(model1_eggs, df = Inf, vcov = cov_model1_eggs)
-```
-
-
-### Зависимая перменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
-
-```{r m1_milk1}
-model1_milk <- lm(milk ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_milk <- vcovHC(model1_milk, type = "HC0")
-coeftest(model1_milk, df = Inf, vcov = cov_model1_milk)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней овощей, кг. (vegetables)
-
-```{r m1_vegetables1}
-model1_vegetables <- lm(vegetables ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_vegetables <- vcovHC(model1_vegetables, type = "HC0")
-coeftest(model1_vegetables, df = Inf, vcov = cov_model1_vegetables)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
-
-```{r m1_fruits_and_berries1}
-model1_fruits_and_berries <- lm(fruits_and_berries ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_fruits_and_berries <- vcovHC(model1_fruits_and_berries, type = "HC0")
-coeftest(model1_fruits_and_berries, df = Inf, vcov = cov_model1_fruits_and_berries)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
-
-```{r m1_cereals1}
-model1_cereals <- lm(cereals ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_cereals <- vcovHC(model1_cereals, type = "HC0")
-coeftest(model1_cereals, df = Inf, vcov = cov_model1_cereals)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней муки и мучных продуктов (flour)
-
-```{r m1_flour1}
-model1_flour <- lm(flour ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_flour <- vcovHC(model1_flour, type = "HC0")
-coeftest(model1_flour, df = Inf, vcov = cov_model1_flour)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
-
-```{r m1_sweets1}
-model1_sweets <- lm(sweets ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status , data = x)
-cov_model1_sweets <- vcovHC(model1_sweets, type = "HC0")
-coeftest(model1_sweets, df = Inf, vcov = cov_model1_sweets)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
-
-```{r m1_softdrinks1}
-model1_softdrinks <- lm(softdrinks ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_softdrinks <- vcovHC(model1_softdrinks, type = "HC0")
-coeftest(model1_softdrinks, df = Inf, vcov = cov_model1_softdrinks)
-
-```
-
-
-### Зависимая перменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
-
-```{r m1_alcodrinks1}
-model1_alcodrinks <- lm(alcodrinks ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = x)
-cov_model1_alcodrinks <- vcovHC(model1_alcodrinks, type = "HC0")
-coeftest(model1_alcodrinks, df = Inf, vcov = cov_model1_alcodrinks)
-
-```
-
-```{r m1_sum_rub_buy}
-model1_sum_rub_buy <- lm(sum_rub_buy ~ 1 + income + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + factor(status), data = x)
-cov_model1_sum_rub_buy <- vcovHC(model1_sum_rub_buy, type = "HC0")
-coeftest(model1_sum_rub_buy, df = Inf, vcov = cov_model1_sum_rub_buy)
-
-```
-
-
-# Построение регрессий 
-
-## Модель 2: с логарифмированным доходом
-
-### Зависимая перменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
+### Зависимая переменная: количество купленного за 7 дней мяса и мясных продуктов, кг. (meat)
 
 ```{r m2_meat}
 model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -487,7 +350,7 @@ coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 ```
 
 
-### Зависимая перменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
+### Зависимая переменная: количество купленной за 7 дней рыбы и морепродуктов, кг. (fish)
 
 ```{r m2_fish}
 model2_fish <- lm(fish ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -498,7 +361,7 @@ coeftest(model2_fish, df = Inf, vcov = cov_model2_fish)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней яиц, шт. (eggs)
+### Зависимая переменная: количество купленных за 7 дней яиц, шт. (eggs)
 
 ```{r m2_eggs}
 model2_eggs <- lm(eggs ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -509,7 +372,7 @@ coeftest(model2_eggs, df = Inf, vcov = cov_model2_eggs)
 ```
 
 
-### Зависимая перменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
+### Зависимая переменная: количество купленного за 7 дней молока и молочных продуктов, л. (milk)
 
 ```{r m2_milk}
 model2_milk <- lm(milk ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -520,7 +383,7 @@ coeftest(model2_milk, df = Inf, vcov = cov_model2_milk)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней овощей, кг. (vegetables)
+### Зависимая переменная: количество купленных за 7 дней овощей, кг. (vegetables)
 
 ```{r m2_vegetables}
 model2_vegetables <- lm(vegetables ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -531,7 +394,7 @@ coeftest(model2_vegetables, df = Inf, vcov = cov_model2_vegetables)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
+### Зависимая переменная: количество купленных за 7 дней фруктов и ягод, кг. (fruits_and_berries)
 
 ```{r m2_fruits_and_berries}
 model2_fruits_and_berries <- lm(fruits_and_berries ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -542,7 +405,7 @@ coeftest(model2_fruits_and_berries, df = Inf, vcov = cov_model2_fruits_and_berri
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
+### Зависимая переменная: количество купленных за 7 дней круп и злаковых, кг. (cereals)
 
 ```{r m2_cereals}
 model2_cereals <- lm(cereals ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -553,7 +416,7 @@ coeftest(model2_cereals, df = Inf, vcov = cov_model2_cereals)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней муки и мучных продуктов (flour)
+### Зависимая переменная: количество купленных за 7 дней муки и мучных продуктов (flour)
 
 ```{r m2_flour}
 model2_flour <- lm(flour ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -564,7 +427,7 @@ coeftest(model2_flour, df = Inf, vcov = cov_model2_flour)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
+### Зависимая переменная: количество купленных за 7 дней кондитерских и содержащих высокий уровень сахара изделий, кг. (sweets)
 
 ```{r m2_sweets}
 model2_sweets <- lm(sweets ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -575,7 +438,7 @@ coeftest(model2_sweets, df = Inf, vcov = cov_model2_sweets)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
+### Зависимая переменная: количество купленных за 7 дней безалкогольных напитков, л. (softdrinks)
 
 ```{r m2_softdrinks}
 model2_softdrinks <- lm(softdrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -586,7 +449,7 @@ coeftest(model2_softdrinks, df = Inf, vcov = cov_model2_softdrinks)
 ```
 
 
-### Зависимая перменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
+### Зависимая переменная: количество купленных за 7 дней алкогольных напитков, л. (alcodrinks)
 
 ```{r m2_alcodrinks}
 model2_alcodrinks <- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
@@ -594,13 +457,6 @@ model2_alcodrinks <- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + 
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
 
-```
-
-```{r}
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + factor(status), data = x)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
 ```
 
 ```{r first_quarter}
@@ -617,7 +473,7 @@ first_quantile <- quantile(x$income, probs = 0.25)
 quantile1 <- x[x$income <= first_quantile, ]
 
 model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                               + debt + govsubs + inval + status, data = quantile1)
+                               + debt + govsubs + inval + factor(status), data = quantile1)
 cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
 coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 
@@ -670,11 +526,6 @@ model2_alcodrinks<- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + f
                        + debt + govsubs + inval + status, data = quantile1)
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
-
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile1)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
 
 #####################################################################################################
 ```
@@ -749,11 +600,6 @@ model2_alcodrinks<- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + f
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
 
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile2)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
-
 ####################################################################################################################################
 ```
 
@@ -773,64 +619,59 @@ quantile3 <- x[x$income > second_quantile & x$income <= third_quantile, ]
 
 
 model2_meat <- lm(meat ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_meat <- vcovHC(model2_meat, type = "HC0")
 coeftest(model2_meat, df = Inf, vcov = cov_model2_meat)
 
 model2_fish <- lm(fish ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_fish <- vcovHC(model2_fish, type = "HC0")
 coeftest(model2_fish, df = Inf, vcov = cov_model2_fish)
 
 model2_eggs<- lm(eggs ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + status, data = quantile3)
+                 + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_eggs <- vcovHC(model2_eggs, type = "HC0")
 coeftest(model2_eggs, df = Inf, vcov = cov_model2_eggs)
 
 model2_milk<- lm(milk ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                 + debt + govsubs + inval + status, data = quantile3)
+                 + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_milk <- vcovHC(model2_milk, type = "HC0")
 coeftest(model2_milk, df = Inf, vcov = cov_model2_milk)
 
 model2_vegetables<- lm(vegetables ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_vegetables <- vcovHC(model2_vegetables, type = "HC0")
 coeftest(model2_vegetables, df = Inf, vcov = cov_model2_vegetables)
 
 model2_fruits_and_berries<- lm(fruits_and_berries ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                               + debt + govsubs + inval + status, data = quantile3)
+                               + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_fruits_and_berries <- vcovHC(model2_fruits_and_berries, type = "HC0")
 coeftest(model2_fruits_and_berries, df = Inf, vcov = cov_model2_fruits_and_berries)
 
 model2_cereals<- lm(cereals ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                    + debt + govsubs + inval + status, data = quantile3)
+                    + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_cereals <- vcovHC(model2_cereals, type = "HC0")
 coeftest(model2_cereals, df = Inf, vcov = cov_model2_cereals)
 
 model2_flour<- lm(flour ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                  + debt + govsubs + inval + status, data = quantile3)
+                  + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_flour <- vcovHC(model2_flour, type = "HC0")
 coeftest(model2_flour, df = Inf, vcov = cov_model2_flour)
 
 model2_sweets<- lm(sweets ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                   + debt + govsubs + inval + status, data = quantile3)
+                   + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_sweets <- vcovHC(model2_sweets, type = "HC0")
 coeftest(model2_sweets, df = Inf, vcov = cov_model2_sweets)
 
 model2_softdrinks<- lm(softdrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_softdrinks <- vcovHC(model2_softdrinks, type = "HC0")
 coeftest(model2_softdrinks, df = Inf, vcov = cov_model2_softdrinks)
 
 model2_alcodrinks<- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                       + debt + govsubs + inval + status, data = quantile3)
+                       + debt + govsubs + inval + factor(status), data = quantile3)
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
-
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile3)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
 
 ####################################################################################################################################
 ```
@@ -905,10 +746,6 @@ model2_alcodrinks<- lm(alcodrinks ~ 1 + log(income) + diplom + car + plot_bi + f
 cov_model2_alcodrinks <- vcovHC(model2_alcodrinks, type = "HC0")
 coeftest(model2_alcodrinks, df = Inf, vcov = cov_model2_alcodrinks)
 
-model2_sum_rub_buy <- lm(sum_rub_buy ~ 1 + log(income) + diplom + car + plot_bi + famsize + water + sanitation + fridge + internet +  pfuel + ptransp + phome
-                         + debt + govsubs + inval + status, data = quantile4)
-cov_model2_sum_rub_buy <- vcovHC(model2_sum_rub_buy, type = "HC0")
-coeftest(model2_sum_rub_buy, df = Inf, vcov = cov_model2_sum_rub_buy)
 
 ```
 
