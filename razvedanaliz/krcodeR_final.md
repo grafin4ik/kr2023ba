@@ -154,23 +154,11 @@ desc_print
 x %>% 
   ggplot(aes(income)) + 
   geom_density(alpha = 0.25) +
-  xlab("Доход в руб.") +
+  xlab("Income, RUB") +
   ylab("")
 ```
 
 ![](krcodeR_final_files/figure-gfm/6-1.png)<!-- -->
-
-## Плотность распределения: расходы на питание в руб.
-
-``` r
-x %>% 
-  ggplot(aes(sum_rub_buy)) + 
-  geom_density(alpha = 0.25) +
-  xlab("Расходы в руб.") +
-  ylab("")
-```
-
-![](krcodeR_final_files/figure-gfm/7-1.png)<!-- -->
 
 ## Корреляция между категориями еды и доходом
 
@@ -932,8 +920,8 @@ t.test(x$alcodrinks ~ x$plot_bi)
 x %>% 
   ggplot(aes(x = income, y = vegetables)) +
   geom_jitter(width = 0.25, alpha = 0.5) +  
-  scale_y_continuous(name = "потребление овощей") +
-  scale_x_continuous(name = "Доходы в руб.")
+  scale_y_continuous(name = "Consumption of Vegetables, kg.") +
+  scale_x_continuous(name = "Income, RUB")
 ```
 
 ![](krcodeR_final_files/figure-gfm/12-1.png)<!-- -->
